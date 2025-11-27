@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camp Setup Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .toolbar {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 5px 10px;
+            border-right: 2px solid #dee2e6;
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.2);
+        }
+
+        .color-swatch.selected {
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+        }
+
+        .zoom-controls {
+            position: fixed;
+            bottom: 80px;
+            right: 30px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .zoom-controls button {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .zoom-controls button:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        .zoom-level {
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .compass-indicator {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 1000;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid #2c3e50;
+        }
+
+        .compass-indicator:hover {
+            transform: translateX(-50%) scale(1.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .compass-letter {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            user-select: none;
+            line-height: 1;
+        }
+
+        .compass-label {
+            font-size: 7px;
+            text-align: center;
+            color: #666;
+            margin-top: 1px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .toolbar button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .toolbar button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .toolbar button.active {
+            background: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+
+        .toolbar button.danger {
+            background: #e74c3c;
+        }
+
+        .toolbar button.danger:hover {
+            background: #c0392b;
+        }
+
+        .toolbar button.border-btn {
+            background: #27ae60;
+        }
+
+        .toolbar button.border-btn:hover {
+            background: #229954;
+        }
+
+        .toolbar input[type="file"] {
+            display: none;
+        }
+
+        .toolbar label {
+            background: #9b59b6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .toolbar label:hover {
+            background: #8e44ad;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
+        }
+
+        .workspace {
+            display: flex;
+            height: calc(100vh - 250px);
+            min-height: 500px;
+        }
+
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(to bottom, #87ceeb 0%, #98d8c8 100%);
+            overflow: auto;
+        }
+
+        .canvas {
+            width: 3000px;
+            height: 2000px;
+            position: relative;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out;
+        }
+
+        .tent {
+            position: absolute;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            border: 3px solid #c92a2a;
+            border-radius: 8px;
+            cursor: move;
+            user-select: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .tent:hover {
+            transform: scale(1.05);
+            z-index: 100 !important;
+        }
+
+        .tent.selected {
+            border-color: #ffd700;
+            border-width: 4px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .tent-label {
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            padding: 5px;
+            word-break: break-word;
+            max-width: 90%;
+        }
+
+        .tent-size {
+            color: rgba(255,255,255,0.8);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .tent.round {
+            border-radius: 50%;
+        }
+
+        .rotate-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #4CAF50;
+            border: 2px solid #2e7d32;
+            border-radius: 50%;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: grab;
+            z-index: 10;
+        }
+
+        .rotate-handle:active {
+            cursor: grabbing;
+        }
+
+        .rotate-handle::before {
+            content: '↻';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .drawing-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .drawing-canvas.active {
+            pointer-events: auto;
+        }
+
+        .drawing-canvas.pencil-active {
+            pointer-events: auto;
+            z-index: 15;
+        }
+
+        .canvas.line-mode {
+            cursor: crosshair;
+        }
+
+        .canvas.pencil-mode {
+            cursor: crosshair;
+        }
+
+        .line-preview {
+            position: absolute;
+            height: 2px;
+            background: #2c3e50;
+            pointer-events: none;
+            z-index: 6;
+            transform-origin: left center;
+        }
+
+        .line-label {
+            position: absolute;
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 7;
+            white-space: nowrap;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto;
+            border-left: 2px solid #e9ecef;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .bg-controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .bg-controls label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .size-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .size-control button {
+            width: 35px;
+            height: 35px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .size-control button:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        .size-control span {
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .property-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .property-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .property-group input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .property-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .size-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .size-inputs input {
+            flex: 1;
+        }
+
+        .tent-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .tent-item {
+            padding: 10px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .tent-item:hover {
+            background: #e3f2fd;
+            border-color: #667eea;
+        }
+
+        .tent-item.selected {
+            background: #bbdefb;
+            border-color: #667eea;
+        }
+
+        .tent-item-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .tent-item-size {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .no-selection {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hint {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛺ Camp Setup Planner</h1>
+            <p>Design your perfect campground layout</p>
+        </div>
+        
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <button onclick="addTent('square')">➕ Add Square Tent</button>
+                <button onclick="addTent('round')">⭕ Add Round Tent</button>
+            </div>
+            <div class="toolbar-group">
+                <span style="font-weight: 600; color: #2c3e50;">Tent Color:</span>
+                <div class="color-palette">
+                    <div class="color-swatch selected" style="background: #e53e3e;" onclick="selectTentColor('red')" data-color="red"></div>
+                    <div class="color-swatch" style="background: #3182ce;" onclick="selectTentColor('blue')" data-color="blue"></div>
+                    <div class="color-swatch" style="background: #38a169;" onclick="selectTentColor('green')" data-color="green"></div>
+                    <div class="color-swatch" style="background: #d69e2e;" onclick="selectTentColor('yellow')" data-color="yellow"></div>
+                    <div class="color-swatch" style="background: #805ad5;" onclick="selectTentColor('purple')" data-color="purple"></div>
+                    <div class="color-swatch" style="background: #dd6b20;" onclick="selectTentColor('orange')" data-color="orange"></div>
+                </div>
+            </div>
+            <div class="toolbar-group">
+                <button id="pencilBtn" onclick="togglePencilTool()">✏️ Pencil Tool</button>
+                <button id="deletePencilBtn" onclick="toggleDeletePencilMode()">🗑️ Delete Pencil</button>
+                <button id="lineBtn" onclick="toggleLineTool()">📏 Line Tool</button>
+                <button id="deleteLineBtn" onclick="toggleDeleteLineMode()">🗑️ Delete Lines</button>
+            </div>
+            <div class="toolbar-group">
+                <label for="bgImageUpload">🖼️ Upload Background</label>
+                <input type="file" id="bgImageUpload" accept="image/*" onchange="handleBackgroundUpload(event)">
+                <button onclick="removeBackground()">❌ Remove Background</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="danger" onclick="deleteSelected()">🗑️ Delete Selected</button>
+                <button onclick="clearAll()">🔄 Clear All</button>
+                <label for="jsonUpload">📂 Load Layout</label>
+                <input type="file" id="jsonUpload" accept="application/json,.json" onchange="handleJsonUpload(event)">
+                <button onclick="exportLayout()">💾 Export Layout</button>
+            </div>
+        </div>
+
+        <div class="workspace">
+            <div class="canvas-container">
+                <div class="compass-indicator" onclick="cycleCompassDirection()" title="Click to change direction">
+                    <div class="compass-letter" id="compassLetter">N</div>
+                    <div class="compass-label" id="compassLabel">North</div>
+                </div>
+                <div class="canvas" id="canvas">
+                    <canvas class="drawing-canvas" id="pencilCanvas"></canvas>
+                    <canvas class="drawing-canvas" id="drawingCanvas"></canvas>
+                    <svg class="grid-overlay" id="gridOverlay"></svg>
+                </div>
+                <div class="hint">
+                    💡 Drag tents to move • Rotate (green handle) • Line tool measures distances in feet
+                </div>
+            </div>
+
+            <div class="zoom-controls">
+                <button onclick="zoomIn()">+</button>
+                <div class="zoom-level" id="zoomLevel">100%</div>
+                <button onclick="zoomOut()">−</button>
+            </div>
+
+            <div class="sidebar">
+                <div class="bg-controls" id="bgControls" style="display: none;">
+                    <h3>Background Image</h3>
+                    <label>Size Control:</label>
+                    <div class="size-control">
+                        <button onclick="adjustBackgroundSize(-10)">−</button>
+                        <span id="bgSizeDisplay">100%</span>
+                        <button onclick="adjustBackgroundSize(10)">+</button>
+                    </div>
+                </div>
+
+                <h3>Tent Properties</h3>
+                <div id="propertiesPanel">
+                    <div class="no-selection">
+                        Select a tent to edit its properties
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px;">All Tents</h3>
+                <div class="tent-list" id="tentList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tents = [];
+        let borders = [];
+        let selectedTent = null;
+        let isDragging = false;
+        let isRotating = false;
+        let isDrawing = false;
+        let lineMode = false;
+        let pencilMode = false;
+        let deleteLineMode = false;
+        let deletePencilMode = false;
+        let dragOffset = { x: 0, y: 0 };
+        let rotateStartAngle = 0;
+        let tentCounter = 1;
+        let borderCounter = 1;
+
+        // Conversion: 1 foot = 10 pixels (adjustable scale)
+        const PIXELS_PER_FOOT = 10;
+
+        // Zoom variables
+        let zoomLevel = 1.0;
+        const zoomStep = 0.1;
+        const minZoom = 0.3;
+        const maxZoom = 3.0;
+
+        // Color variables
+        let currentTentColor = 'red';
+        const tentColors = {
+            red: { bg: '#e53e3e', border: '#9b2c2c' },
+            blue: { bg: '#3182ce', border: '#2c5282' },
+            green: { bg: '#38a169', border: '#276749' },
+            yellow: { bg: '#d69e2e', border: '#975a16' },
+            purple: { bg: '#805ad5', border: '#553c9a' },
+            orange: { bg: '#dd6b20', border: '#9c4221' }
+        };
+
+        // Compass direction
+        let compassDirection = 'N';
+        const compassDirections = [
+            { letter: 'N', label: 'North' },
+            { letter: 'E', label: 'East' },
+            { letter: 'S', label: 'South' },
+            { letter: 'W', label: 'West' }
+        ];
+        let compassIndex = 0;
+
+        // Drawing/Line variables
+        let drawingCanvas;
+        let drawingCtx;
+        let pencilCanvas;
+        let pencilCtx;
+        let lines = [];
+        let pencilStrokes = [];
+        let currentStroke = [];
+        let currentLine = null;
+        let lineStartX = 0;
+        let lineStartY = 0;
+        let linePreview = null;
+        let lineLabel = null;
+        let lastPencilX = 0;
+        let lastPencilY = 0;
+
+        // Background variables
+        let backgroundSize = 100; // percentage
+        let backgroundImage = null;
+
+        function feetToPixels(feet) {
+            return feet * PIXELS_PER_FOOT;
+        }
+
+        function pixelsToFeet(pixels) {
+            return Math.round((pixels / PIXELS_PER_FOOT) * 10) / 10;
+        }
+
+        const canvas = document.getElementById('canvas');
+        const canvasContainer = document.querySelector('.canvas-container');
+
+        // Zoom functions
+        function updateZoom() {
+            canvas.style.transform = `scale(${zoomLevel})`;
+            document.getElementById('zoomLevel').textContent = Math.round(zoomLevel * 100) + '%';
+        }
+
+        function zoomIn() {
+            if (zoomLevel < maxZoom) {
+                zoomLevel = Math.min(maxZoom, zoomLevel + zoomStep);
+                updateZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (zoomLevel > minZoom) {
+                zoomLevel = Math.max(minZoom, zoomLevel - zoomStep);
+                updateZoom();
+            }
+        }
+
+        // Mouse wheel zoom
+        canvasContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            
+            if (e.deltaY < 0) {
+                // Scroll up - zoom in
+                zoomIn();
+            } else {
+                // Scroll down - zoom out
+                zoomOut();
+            }
+        }, { passive: false });
+
+        // Color selection
+        function selectTentColor(color) {
+            currentTentColor = color;
+            
+            // Update selected state
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+                swatch.classList.remove('selected');
+            });
+            document.querySelector(`.color-swatch[data-color="${color}"]`).classList.add('selected');
+        }
+
+        function changeTentColor(color) {
+            if (selectedTent) {
+                selectedTent.color = color;
+                const tentEl = document.getElementById(selectedTent.id);
+                const colorScheme = tentColors[color];
+                tentEl.style.background = colorScheme.bg;
+                tentEl.style.borderColor = colorScheme.border;
+            }
+        }
+
+        // Compass direction cycling
+        function cycleCompassDirection() {
+            compassIndex = (compassIndex + 1) % compassDirections.length;
+            const direction = compassDirections[compassIndex];
+            compassDirection = direction.letter;
+            
+            document.getElementById('compassLetter').textContent = direction.letter;
+            document.getElementById('compassLabel').textContent = direction.label;
+        }
+
+        function addTent(shape = 'square') {
+            const tent = {
+                id: `tent-${tentCounter++}`,
+                name: `Tent ${tentCounter - 1}`,
+                x: 100,
+                y: 100,
+                width: 120,
+                height: 120,
+                shape: shape,
+                rotation: 0,
+                color: currentTentColor,
+                zIndex: tents.length
+            };
+            tents.push(tent);
+            renderTent(tent);
+            updateTentList();
+        }
+
+        function renderTent(tent) {
+            const tentEl = document.createElement('div');
+            tentEl.className = 'tent';
+            if (tent.shape === 'round') {
+                tentEl.classList.add('round');
+            }
+            tentEl.id = tent.id;
+            tentEl.style.left = tent.x + 'px';
+            tentEl.style.top = tent.y + 'px';
+            tentEl.style.width = tent.width + 'px';
+            tentEl.style.height = tent.height + 'px';
+            tentEl.style.zIndex = tent.zIndex + 10;
+            tentEl.style.transform = `rotate(${tent.rotation}deg)`;
+            
+            // Apply tent color
+            const colorScheme = tentColors[tent.color] || tentColors.red;
+            tentEl.style.background = colorScheme.bg;
+            tentEl.style.borderColor = colorScheme.border;
+
+            const widthFeet = pixelsToFeet(tent.width);
+            const heightFeet = pixelsToFeet(tent.height);
+            const sizeText = tent.shape === 'round' ? `${widthFeet}ft diameter` : `${widthFeet}×${heightFeet}ft`;
+
+            const rotateHandle = tent.shape === 'square' ? '<div class="rotate-handle"></div>' : '';
+
+            tentEl.innerHTML = `
+                <div class="tent-label">
+                    ${tent.name}
+                    <div class="tent-size">${sizeText}</div>
+                </div>
+                ${rotateHandle}
+            `;
+
+            tentEl.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('rotate-handle')) {
+                    startRotate(tent, e);
+                } else {
+                    startDrag(tent, e);
+                }
+            });
+
+            tentEl.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (target.classList.contains('rotate-handle')) {
+                    startRotate(tent, touch);
+                } else {
+                    startDrag(tent, touch);
+                }
+            });
+
+            canvas.appendChild(tentEl);
+        }
+
+        function startDrag(tent, e) {
+            if (lineMode || pencilMode || deleteLineMode || deletePencilMode) return; // Don't drag in drawing or delete modes
+            if (e.preventDefault) e.preventDefault();
+            selectTent(tent);
+            isDragging = true;
+            const tentEl = document.getElementById(tent.id);
+            const rect = tentEl.getBoundingClientRect();
+            const clientX = e.clientX || e.pageX;
+            const clientY = e.clientY || e.pageY;
+            // Calculate offset accounting for zoom
+            dragOffset.x = (clientX - rect.left) / zoomLevel;
+            dragOffset.y = (clientY - rect.top) / zoomLevel;
+        }
+
+        function startRotate(tent, e) {
+            if (e.preventDefault) e.preventDefault();
+            if (e.stopPropagation) e.stopPropagation();
+            selectTent(tent);
+            isRotating = true;
+            
+            const clientX = e.clientX || e.pageX;
+            const clientY = e.clientY || e.pageY;
+            
+            const tentEl = document.getElementById(tent.id);
+            const rect = tentEl.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            rotateStartAngle = Math.atan2(clientY - centerY, clientX - centerX) * 180 / Math.PI;
+        }
+
+        function handleMove(e) {
+            if (lineMode || pencilMode || deleteLineMode || deletePencilMode) return; // Don't interfere with drawing or delete modes
+            
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+            if (!clientX || !clientY) return;
+
+            if (isDragging && selectedTent) {
+                const canvasRect = canvas.getBoundingClientRect();
+                // Account for zoom level when calculating position
+                let newX = (clientX - canvasRect.left) / zoomLevel - dragOffset.x;
+                let newY = (clientY - canvasRect.top) / zoomLevel - dragOffset.y;
+
+                newX = Math.max(0, Math.min(newX, canvas.offsetWidth - selectedTent.width));
+                newY = Math.max(0, Math.min(newY, canvas.offsetHeight - selectedTent.height));
+
+                selectedTent.x = newX;
+                selectedTent.y = newY;
+
+                const tentEl = document.getElementById(selectedTent.id);
+                tentEl.style.left = newX + 'px';
+                tentEl.style.top = newY + 'px';
+            } else if (isRotating && selectedTent) {
+                const tentEl = document.getElementById(selectedTent.id);
+                const rect = tentEl.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const currentAngle = Math.atan2(clientY - centerY, clientX - centerX) * 180 / Math.PI;
+                const angleDiff = currentAngle - rotateStartAngle;
+                
+                selectedTent.rotation = (selectedTent.rotation + angleDiff + 360) % 360;
+                tentEl.style.transform = `rotate(${selectedTent.rotation}deg)`;
+                
+                rotateStartAngle = currentAngle;
+                updateProperties();
+            }
+        }
+
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('touchmove', handleMove);
+
+        function handleEnd() {
+            isDragging = false;
+            isRotating = false;
+        }
+
+        document.addEventListener('mouseup', handleEnd);
+        document.addEventListener('touchend', handleEnd);
+
+        function selectTent(tent) {
+            selectedTent = tent;
+            document.querySelectorAll('.tent').forEach(el => el.classList.remove('selected'));
+            document.getElementById(tent.id).classList.add('selected');
+            updateProperties();
+            updateTentList();
+        }
+
+        function updateProperties() {
+            if (!selectedTent) {
+                document.getElementById('propertiesPanel').innerHTML = `
+                    <div class="no-selection">
+                        Select a tent to edit its properties
+                    </div>
+                `;
+                return;
+            }
+
+            const widthFeet = pixelsToFeet(selectedTent.width);
+            const heightFeet = pixelsToFeet(selectedTent.height);
+
+            if (selectedTent.shape === 'round') {
+                document.getElementById('propertiesPanel').innerHTML = `
+                    <div class="property-group">
+                        <label>Tent Name:</label>
+                        <input type="text" id="tentName" value="${selectedTent.name}" 
+                               onchange="updateTentName(this.value)">
+                    </div>
+                    <div class="property-group">
+                        <label>Shape:</label>
+                        <input type="text" value="Round" disabled>
+                    </div>
+                    <div class="property-group">
+                        <label>Color:</label>
+                        <div class="color-palette">
+                            <div class="color-swatch ${selectedTent.color === 'red' ? 'selected' : ''}" style="background: #e53e3e;" onclick="changeTentColor('red')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'blue' ? 'selected' : ''}" style="background: #3182ce;" onclick="changeTentColor('blue')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'green' ? 'selected' : ''}" style="background: #38a169;" onclick="changeTentColor('green')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'yellow' ? 'selected' : ''}" style="background: #d69e2e;" onclick="changeTentColor('yellow')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'purple' ? 'selected' : ''}" style="background: #805ad5;" onclick="changeTentColor('purple')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'orange' ? 'selected' : ''}" style="background: #dd6b20;" onclick="changeTentColor('orange')"></div>
+                        </div>
+                    </div>
+                    <div class="property-group">
+                        <label>Diameter (feet):</label>
+                        <input type="number" id="tentDiameter" value="${widthFeet}" 
+                               min="2" step="0.5" onchange="updateTentDiameter()">
+                    </div>
+                    <div class="property-group">
+                        <label>Position (X, Y):</label>
+                        <div class="size-inputs">
+                            <input type="number" id="tentX" value="${Math.round(selectedTent.x)}" 
+                                   min="0" onchange="updateTentPosition()">
+                            <input type="number" id="tentY" value="${Math.round(selectedTent.y)}" 
+                                   min="0" onchange="updateTentPosition()">
+                        </div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('propertiesPanel').innerHTML = `
+                    <div class="property-group">
+                        <label>Tent Name:</label>
+                        <input type="text" id="tentName" value="${selectedTent.name}" 
+                               onchange="updateTentName(this.value)">
+                    </div>
+                    <div class="property-group">
+                        <label>Shape:</label>
+                        <input type="text" value="Square" disabled>
+                    </div>
+                    <div class="property-group">
+                        <label>Color:</label>
+                        <div class="color-palette">
+                            <div class="color-swatch ${selectedTent.color === 'red' ? 'selected' : ''}" style="background: #e53e3e;" onclick="changeTentColor('red')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'blue' ? 'selected' : ''}" style="background: #3182ce;" onclick="changeTentColor('blue')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'green' ? 'selected' : ''}" style="background: #38a169;" onclick="changeTentColor('green')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'yellow' ? 'selected' : ''}" style="background: #d69e2e;" onclick="changeTentColor('yellow')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'purple' ? 'selected' : ''}" style="background: #805ad5;" onclick="changeTentColor('purple')"></div>
+                            <div class="color-swatch ${selectedTent.color === 'orange' ? 'selected' : ''}" style="background: #dd6b20;" onclick="changeTentColor('orange')"></div>
+                        </div>
+                    </div>
+                    <div class="property-group">
+                        <label>Size (Width × Height in feet):</label>
+                        <div class="size-inputs">
+                            <input type="number" id="tentWidth" value="${widthFeet}" 
+                                   min="2" step="0.5" onchange="updateTentSize()">
+                            <input type="number" id="tentHeight" value="${heightFeet}" 
+                                   min="2" step="0.5" onchange="updateTentSize()">
+                        </div>
+                    </div>
+                    <div class="property-group">
+                        <label>Rotation (degrees):</label>
+                        <input type="number" id="tentRotation" value="${Math.round(selectedTent.rotation)}" 
+                               min="0" max="359" onchange="updateTentRotation()">
+                    </div>
+                    <div class="property-group">
+                        <label>Position (X, Y):</label>
+                        <div class="size-inputs">
+                            <input type="number" id="tentX" value="${Math.round(selectedTent.x)}" 
+                                   min="0" onchange="updateTentPosition()">
+                            <input type="number" id="tentY" value="${Math.round(selectedTent.y)}" 
+                                   min="0" onchange="updateTentPosition()">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function updateTentName(name) {
+            if (selectedTent) {
+                selectedTent.name = name;
+                const label = document.querySelector(`#${selectedTent.id} .tent-label`);
+                const sizeText = label.querySelector('.tent-size').outerHTML;
+                label.innerHTML = name + sizeText;
+                updateTentList();
+            }
+        }
+
+        function updateTentSize() {
+            if (selectedTent) {
+                const widthFeet = parseFloat(document.getElementById('tentWidth').value);
+                const heightFeet = parseFloat(document.getElementById('tentHeight').value);
+                selectedTent.width = Math.max(feetToPixels(2), feetToPixels(widthFeet));
+                selectedTent.height = Math.max(feetToPixels(2), feetToPixels(heightFeet));
+                
+                const tentEl = document.getElementById(selectedTent.id);
+                tentEl.style.width = selectedTent.width + 'px';
+                tentEl.style.height = selectedTent.height + 'px';
+                
+                const sizeLabel = tentEl.querySelector('.tent-size');
+                if (sizeLabel) {
+                    const newWidthFeet = pixelsToFeet(selectedTent.width);
+                    const newHeightFeet = pixelsToFeet(selectedTent.height);
+                    sizeLabel.textContent = `${newWidthFeet}×${newHeightFeet}ft`;
+                }
+            }
+        }
+
+        function updateTentDiameter() {
+            if (selectedTent && selectedTent.shape === 'round') {
+                const diameterFeet = parseFloat(document.getElementById('tentDiameter').value);
+                const diameter = Math.max(feetToPixels(2), feetToPixels(diameterFeet));
+                selectedTent.width = diameter;
+                selectedTent.height = diameter;
+                
+                const tentEl = document.getElementById(selectedTent.id);
+                tentEl.style.width = diameter + 'px';
+                tentEl.style.height = diameter + 'px';
+                
+                const sizeLabel = tentEl.querySelector('.tent-size');
+                if (sizeLabel) {
+                    const newDiameterFeet = pixelsToFeet(diameter);
+                    sizeLabel.textContent = `${newDiameterFeet}ft diameter`;
+                }
+            }
+        }
+
+        function updateTentRotation() {
+            if (selectedTent && selectedTent.shape === 'square') {
+                let rotation = parseInt(document.getElementById('tentRotation').value);
+                rotation = ((rotation % 360) + 360) % 360; // Normalize to 0-359
+                selectedTent.rotation = rotation;
+                
+                const tentEl = document.getElementById(selectedTent.id);
+                tentEl.style.transform = `rotate(${rotation}deg)`;
+            }
+        }
+
+        function updateTentPosition() {
+            if (selectedTent) {
+                const x = parseInt(document.getElementById('tentX').value);
+                const y = parseInt(document.getElementById('tentY').value);
+                selectedTent.x = Math.max(0, x);
+                selectedTent.y = Math.max(0, y);
+                
+                const tentEl = document.getElementById(selectedTent.id);
+                tentEl.style.left = selectedTent.x + 'px';
+                tentEl.style.top = selectedTent.y + 'px';
+            }
+        }
+
+        function updateTentList() {
+            const listEl = document.getElementById('tentList');
+            listEl.innerHTML = tents.map(tent => {
+                const widthFeet = pixelsToFeet(tent.width);
+                const heightFeet = pixelsToFeet(tent.height);
+                const sizeText = tent.shape === 'round' ? `${widthFeet}ft ⭕` : `${widthFeet}×${heightFeet}ft`;
+                
+                return `
+                    <div class="tent-item ${tent === selectedTent ? 'selected' : ''}" 
+                         onclick="selectTentById('${tent.id}')">
+                        <div class="tent-item-name">${tent.name}</div>
+                        <div class="tent-item-size">${sizeText}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectTentById(id) {
+            const tent = tents.find(t => t.id === id);
+            if (tent) selectTent(tent);
+        }
+
+        function deleteSelected() {
+            if (selectedTent) {
+                const tentEl = document.getElementById(selectedTent.id);
+                tentEl.remove();
+                tents = tents.filter(t => t.id !== selectedTent.id);
+                selectedTent = null;
+                updateProperties();
+                updateTentList();
+            }
+        }
+
+        function clearAll() {
+            if (confirm('Clear all tents, lines, and drawings?')) {
+                tents = [];
+                lines = [];
+                pencilStrokes = [];
+                selectedTent = null;
+                canvas.innerHTML = '<canvas class="drawing-canvas" id="pencilCanvas"></canvas><canvas class="drawing-canvas" id="drawingCanvas"></canvas><svg class="grid-overlay" id="gridOverlay"></svg>';
+                
+                // Reinitialize drawing canvas
+                drawingCanvas = document.getElementById('drawingCanvas');
+                drawingCtx = drawingCanvas.getContext('2d');
+                drawingCanvas.width = canvas.offsetWidth;
+                drawingCanvas.height = canvas.offsetHeight;
+                drawingCtx.lineWidth = 2;
+                drawingCtx.lineCap = 'round';
+                drawingCtx.strokeStyle = '#2c3e50';
+                
+                // Reinitialize pencil canvas
+                pencilCanvas = document.getElementById('pencilCanvas');
+                pencilCtx = pencilCanvas.getContext('2d');
+                pencilCanvas.width = canvas.offsetWidth;
+                pencilCanvas.height = canvas.offsetHeight;
+                pencilCtx.lineWidth = 3;
+                pencilCtx.lineCap = 'round';
+                pencilCtx.strokeStyle = '#e74c3c';
+                
+                updateProperties();
+                updateTentList();
+            }
+        }
+
+        function exportLayout() {
+            const data = {
+                tents: tents.map(tent => ({
+                    ...tent,
+                    widthFeet: pixelsToFeet(tent.width),
+                    heightFeet: pixelsToFeet(tent.height)
+                })),
+                lines: lines,
+                pencilStrokes: pencilStrokes,
+                backgroundImage: backgroundImage,
+                backgroundSize: backgroundSize,
+                compassDirection: compassDirection
+            };
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'camp-layout.json';
+            a.click();
+        }
+
+        function handleJsonUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    loadLayout(data);
+                    alert('Layout loaded successfully!');
+                } catch (error) {
+                    alert('Error loading layout: Invalid JSON file');
+                    console.error('Error loading layout:', error);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset input so same file can be loaded again
+            event.target.value = '';
+        }
+
+        function loadLayout(data) {
+            // Clear existing layout
+            tents = [];
+            lines = [];
+            pencilStrokes = [];
+            selectedTent = null;
+            
+            // Clear canvas
+            canvas.innerHTML = '<canvas class="drawing-canvas" id="pencilCanvas"></canvas><canvas class="drawing-canvas" id="drawingCanvas"></canvas><svg class="grid-overlay" id="gridOverlay"></svg>';
+            
+            // Reinitialize canvases
+            drawingCanvas = document.getElementById('drawingCanvas');
+            drawingCtx = drawingCanvas.getContext('2d');
+            drawingCanvas.width = canvas.offsetWidth;
+            drawingCanvas.height = canvas.offsetHeight;
+            drawingCtx.lineWidth = 2;
+            drawingCtx.lineCap = 'round';
+            drawingCtx.strokeStyle = '#2c3e50';
+            
+            pencilCanvas = document.getElementById('pencilCanvas');
+            pencilCtx = pencilCanvas.getContext('2d');
+            pencilCanvas.width = canvas.offsetWidth;
+            pencilCanvas.height = canvas.offsetHeight;
+            pencilCtx.lineWidth = 3;
+            pencilCtx.lineCap = 'round';
+            pencilCtx.strokeStyle = '#e74c3c';
+            
+            // Load tents
+            if (data.tents) {
+                tentCounter = 1;
+                data.tents.forEach(tentData => {
+                    const tent = {
+                        id: `tent-${tentCounter++}`,
+                        name: tentData.name || `Tent ${tentCounter - 1}`,
+                        x: tentData.x || 100,
+                        y: tentData.y || 100,
+                        width: tentData.width || 120,
+                        height: tentData.height || 120,
+                        shape: tentData.shape || 'square',
+                        rotation: tentData.rotation || 0,
+                        color: tentData.color || 'red',
+                        zIndex: tents.length
+                    };
+                    tents.push(tent);
+                    renderTent(tent);
+                });
+            }
+            
+            // Load lines
+            if (data.lines) {
+                lines = data.lines;
+                redrawLines();
+            }
+            
+            // Load pencil strokes
+            if (data.pencilStrokes) {
+                pencilStrokes = data.pencilStrokes;
+                redrawPencil();
+            }
+            
+            // Load background image
+            if (data.backgroundImage) {
+                backgroundImage = data.backgroundImage;
+                canvas.style.backgroundImage = `url(${backgroundImage})`;
+                backgroundSize = data.backgroundSize || 100;
+                canvas.style.backgroundSize = backgroundSize + '%';
+                document.getElementById('bgControls').style.display = 'block';
+                document.getElementById('bgSizeDisplay').textContent = backgroundSize + '%';
+            } else {
+                removeBackground();
+            }
+            
+            // Load compass direction
+            if (data.compassDirection) {
+                compassDirection = data.compassDirection;
+                const dirIndex = compassDirections.findIndex(d => d.letter === compassDirection);
+                if (dirIndex >= 0) {
+                    compassIndex = dirIndex;
+                    document.getElementById('compassLetter').textContent = compassDirections[dirIndex].letter;
+                    document.getElementById('compassLabel').textContent = compassDirections[dirIndex].label;
+                }
+            }
+            
+            updateTentList();
+            updateProperties();
+        }
+
+        // Initialize with example tents
+        addTent('square');
+        addTent('round');
+        tents[1].x = 250;
+        tents[1].y = 150;
+        const tent1El = document.getElementById(tents[1].id);
+        tent1El.style.left = '250px';
+        tent1El.style.top = '150px';
+        updateTentList();
+
+        // Initialize drawing canvas
+        drawingCanvas = document.getElementById('drawingCanvas');
+        drawingCtx = drawingCanvas.getContext('2d');
+        drawingCanvas.width = canvas.offsetWidth;
+        drawingCanvas.height = canvas.offsetHeight;
+        drawingCtx.lineWidth = 2;
+        drawingCtx.lineCap = 'round';
+        drawingCtx.strokeStyle = '#2c3e50';
+
+        // Initialize pencil canvas
+        pencilCanvas = document.getElementById('pencilCanvas');
+        pencilCtx = pencilCanvas.getContext('2d');
+        pencilCanvas.width = canvas.offsetWidth;
+        pencilCanvas.height = canvas.offsetHeight;
+        pencilCtx.lineWidth = 3;
+        pencilCtx.lineCap = 'round';
+        pencilCtx.strokeStyle = '#e74c3c';
+
+        // Pencil tool functions
+        function togglePencilTool() {
+            pencilMode = !pencilMode;
+            const pencilBtn = document.getElementById('pencilBtn');
+            const lineBtn = document.getElementById('lineBtn');
+            const deletePencilBtn = document.getElementById('deletePencilBtn');
+            const canvasEl = document.getElementById('canvas');
+            
+            if (pencilMode) {
+                // Turn off line mode if it's on
+                if (lineMode) {
+                    lineMode = false;
+                    lineBtn.classList.remove('active');
+                    canvasEl.classList.remove('line-mode');
+                    drawingCanvas.classList.remove('active');
+                    removeLinePreview();
+                }
+                
+                // Turn off delete modes
+                if (deletePencilMode) {
+                    deletePencilMode = false;
+                    deletePencilBtn.classList.remove('active');
+                }
+                if (deleteLineMode) {
+                    deleteLineMode = false;
+                    document.getElementById('deleteLineBtn').classList.remove('active');
+                }
+                
+                pencilBtn.classList.add('active');
+                canvasEl.classList.add('pencil-mode');
+                pencilCanvas.classList.add('pencil-active');
+            } else {
+                pencilBtn.classList.remove('active');
+                canvasEl.classList.remove('pencil-mode');
+                pencilCanvas.classList.remove('pencil-active');
+            }
+        }
+
+        function toggleDeletePencilMode() {
+            deletePencilMode = !deletePencilMode;
+            const deletePencilBtn = document.getElementById('deletePencilBtn');
+            const pencilBtn = document.getElementById('pencilBtn');
+            const canvasEl = document.getElementById('canvas');
+            
+            if (deletePencilMode) {
+                // Turn off drawing modes
+                if (pencilMode) {
+                    pencilMode = false;
+                    pencilBtn.classList.remove('active');
+                    canvasEl.classList.remove('pencil-mode');
+                    pencilCanvas.classList.remove('pencil-active');
+                }
+                if (lineMode) {
+                    lineMode = false;
+                    document.getElementById('lineBtn').classList.remove('active');
+                    canvasEl.classList.remove('line-mode');
+                    drawingCanvas.classList.remove('active');
+                    removeLinePreview();
+                }
+                if (deleteLineMode) {
+                    deleteLineMode = false;
+                    document.getElementById('deleteLineBtn').classList.remove('active');
+                }
+                
+                deletePencilBtn.classList.add('active');
+                pencilCanvas.classList.add('pencil-active');
+            } else {
+                deletePencilBtn.classList.remove('active');
+                pencilCanvas.classList.remove('pencil-active');
+            }
+        }
+
+        function redrawPencil() {
+            pencilCtx.clearRect(0, 0, pencilCanvas.width, pencilCanvas.height);
+            pencilCtx.strokeStyle = '#e74c3c';
+            pencilCtx.lineWidth = 3;
+            pencilCtx.lineCap = 'round';
+            
+            pencilStrokes.forEach(stroke => {
+                if (stroke.length < 2) return;
+                pencilCtx.beginPath();
+                pencilCtx.moveTo(stroke[0].x, stroke[0].y);
+                for (let i = 1; i < stroke.length; i++) {
+                    pencilCtx.lineTo(stroke[i].x, stroke[i].y);
+                }
+                pencilCtx.stroke();
+            });
+        }
+
+        function isPointNearStroke(x, y, stroke, threshold = 10) {
+            for (let i = 0; i < stroke.length - 1; i++) {
+                const p1 = stroke[i];
+                const p2 = stroke[i + 1];
+                const distance = distanceToLineSegment(x, y, p1.x, p1.y, p2.x, p2.y);
+                if (distance < threshold) return true;
+            }
+            return false;
+        }
+
+        function distanceToLineSegment(px, py, x1, y1, x2, y2) {
+            const A = px - x1;
+            const B = py - y1;
+            const C = x2 - x1;
+            const D = y2 - y1;
+            
+            const dot = A * C + B * D;
+            const lenSq = C * C + D * D;
+            let param = -1;
+            
+            if (lenSq !== 0) param = dot / lenSq;
+            
+            let xx, yy;
+            
+            if (param < 0) {
+                xx = x1;
+                yy = y1;
+            } else if (param > 1) {
+                xx = x2;
+                yy = y2;
+            } else {
+                xx = x1 + param * C;
+                yy = y1 + param * D;
+            }
+            
+            const dx = px - xx;
+            const dy = py - yy;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // Pencil drawing event handlers
+        pencilCanvas.addEventListener('mousedown', (e) => {
+            const rect = pencilCanvas.getBoundingClientRect();
+            const clickX = (e.clientX - rect.left) / zoomLevel;
+            const clickY = (e.clientY - rect.top) / zoomLevel;
+            
+            // Delete mode - click to delete strokes
+            if (deletePencilMode) {
+                for (let i = pencilStrokes.length - 1; i >= 0; i--) {
+                    if (isPointNearStroke(clickX, clickY, pencilStrokes[i])) {
+                        pencilStrokes.splice(i, 1);
+                        redrawPencil();
+                        return;
+                    }
+                }
+                return;
+            }
+            
+            // Drawing mode - draw new strokes
+            if (!pencilMode) return;
+            
+            isDrawing = true;
+            currentStroke = [{x: clickX, y: clickY}];
+            lastPencilX = clickX;
+            lastPencilY = clickY;
+        });
+
+        pencilCanvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !pencilMode) return;
+            const rect = pencilCanvas.getBoundingClientRect();
+            const currentX = (e.clientX - rect.left) / zoomLevel;
+            const currentY = (e.clientY - rect.top) / zoomLevel;
+            
+            currentStroke.push({x: currentX, y: currentY});
+            
+            pencilCtx.beginPath();
+            pencilCtx.moveTo(lastPencilX, lastPencilY);
+            pencilCtx.lineTo(currentX, currentY);
+            pencilCtx.stroke();
+            
+            lastPencilX = currentX;
+            lastPencilY = currentY;
+        });
+
+        pencilCanvas.addEventListener('mouseup', () => {
+            if (isDrawing && currentStroke.length > 1) {
+                pencilStrokes.push(currentStroke);
+                currentStroke = [];
+            }
+            isDrawing = false;
+        });
+
+        pencilCanvas.addEventListener('mouseleave', () => {
+            if (isDrawing && currentStroke.length > 1) {
+                pencilStrokes.push(currentStroke);
+                currentStroke = [];
+            }
+            isDrawing = false;
+        });
+
+        // Touch support for pencil
+        pencilCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const rect = pencilCanvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const clickX = (touch.clientX - rect.left) / zoomLevel;
+            const clickY = (touch.clientY - rect.top) / zoomLevel;
+            
+            // Delete mode - click to delete strokes
+            if (deletePencilMode) {
+                for (let i = pencilStrokes.length - 1; i >= 0; i--) {
+                    if (isPointNearStroke(clickX, clickY, pencilStrokes[i])) {
+                        pencilStrokes.splice(i, 1);
+                        redrawPencil();
+                        return;
+                    }
+                }
+                return;
+            }
+            
+            // Drawing mode - draw new strokes
+            if (!pencilMode) return;
+            
+            isDrawing = true;
+            currentStroke = [{x: clickX, y: clickY}];
+            lastPencilX = clickX;
+            lastPencilY = clickY;
+        });
+
+        pencilCanvas.addEventListener('touchmove', (e) => {
+            if (!isDrawing || !pencilMode) return;
+            e.preventDefault();
+            const rect = pencilCanvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const currentX = (touch.clientX - rect.left) / zoomLevel;
+            const currentY = (touch.clientY - rect.top) / zoomLevel;
+            
+            currentStroke.push({x: currentX, y: currentY});
+            
+            pencilCtx.beginPath();
+            pencilCtx.moveTo(lastPencilX, lastPencilY);
+            pencilCtx.lineTo(currentX, currentY);
+            pencilCtx.stroke();
+            
+            lastPencilX = currentX;
+            lastPencilY = currentY;
+        });
+
+        pencilCanvas.addEventListener('touchend', () => {
+            if (isDrawing && currentStroke.length > 1) {
+                pencilStrokes.push(currentStroke);
+                currentStroke = [];
+            }
+            isDrawing = false;
+        });
+
+        // Line tool functions
+        function toggleLineTool() {
+            lineMode = !lineMode;
+            const btn = document.getElementById('lineBtn');
+            const pencilBtn = document.getElementById('pencilBtn');
+            const deleteLineBtn = document.getElementById('deleteLineBtn');
+            const canvasEl = document.getElementById('canvas');
+            
+            if (lineMode) {
+                // Turn off pencil mode if it's on
+                if (pencilMode) {
+                    pencilMode = false;
+                    pencilBtn.classList.remove('active');
+                    canvasEl.classList.remove('pencil-mode');
+                    pencilCanvas.classList.remove('pencil-active');
+                }
+                
+                // Turn off delete modes
+                if (deletePencilMode) {
+                    deletePencilMode = false;
+                    document.getElementById('deletePencilBtn').classList.remove('active');
+                }
+                if (deleteLineMode) {
+                    deleteLineMode = false;
+                    deleteLineBtn.classList.remove('active');
+                }
+                
+                btn.classList.add('active');
+                canvasEl.classList.add('line-mode');
+                drawingCanvas.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+                canvasEl.classList.remove('line-mode');
+                drawingCanvas.classList.remove('active');
+                removeLinePreview();
+            }
+        }
+
+        function toggleDeleteLineMode() {
+            deleteLineMode = !deleteLineMode;
+            const deleteLineBtn = document.getElementById('deleteLineBtn');
+            const lineBtn = document.getElementById('lineBtn');
+            const canvasEl = document.getElementById('canvas');
+            
+            if (deleteLineMode) {
+                // Turn off drawing modes
+                if (lineMode) {
+                    lineMode = false;
+                    lineBtn.classList.remove('active');
+                    canvasEl.classList.remove('line-mode');
+                    drawingCanvas.classList.remove('active');
+                    removeLinePreview();
+                }
+                if (pencilMode) {
+                    pencilMode = false;
+                    document.getElementById('pencilBtn').classList.remove('active');
+                    canvasEl.classList.remove('pencil-mode');
+                    pencilCanvas.classList.remove('pencil-active');
+                }
+                if (deletePencilMode) {
+                    deletePencilMode = false;
+                    document.getElementById('deletePencilBtn').classList.remove('active');
+                }
+                
+                deleteLineBtn.classList.add('active');
+                drawingCanvas.classList.add('active');
+            } else {
+                deleteLineBtn.classList.remove('active');
+                drawingCanvas.classList.remove('active');
+            }
+        }
+
+        function clearLines() {
+            lines = [];
+            drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        }
+
+        function isPointNearLine(x, y, line, threshold = 15) {
+            return distanceToLineSegment(x, y, line.x1, line.y1, line.x2, line.y2) < threshold;
+        }
+
+        function redrawLines() {
+            drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+            drawingCtx.strokeStyle = '#2c3e50';
+            drawingCtx.lineWidth = 2;
+            
+            lines.forEach(line => {
+                drawingCtx.beginPath();
+                drawingCtx.moveTo(line.x1, line.y1);
+                drawingCtx.lineTo(line.x2, line.y2);
+                drawingCtx.stroke();
+                
+                // Draw distance label
+                const midX = (line.x1 + line.x2) / 2;
+                const midY = (line.y1 + line.y2) / 2;
+                drawingCtx.fillStyle = 'rgba(44, 62, 80, 0.9)';
+                drawingCtx.font = 'bold 12px Arial';
+                drawingCtx.textAlign = 'center';
+                drawingCtx.textBaseline = 'middle';
+                
+                const distanceFeet = line.distance.toFixed(1);
+                const textWidth = drawingCtx.measureText(distanceFeet + ' ft').width;
+                drawingCtx.fillRect(midX - textWidth/2 - 4, midY - 8, textWidth + 8, 16);
+                
+                drawingCtx.fillStyle = 'white';
+                drawingCtx.fillText(distanceFeet + ' ft', midX, midY);
+            });
+        }
+
+        function createLinePreview() {
+            if (!linePreview) {
+                linePreview = document.createElement('div');
+                linePreview.className = 'line-preview';
+                canvas.appendChild(linePreview);
+            }
+            if (!lineLabel) {
+                lineLabel = document.createElement('div');
+                lineLabel.className = 'line-label';
+                canvas.appendChild(lineLabel);
+            }
+        }
+
+        function removeLinePreview() {
+            if (linePreview) {
+                linePreview.remove();
+                linePreview = null;
+            }
+            if (lineLabel) {
+                lineLabel.remove();
+                lineLabel = null;
+            }
+        }
+
+        function updateLinePreview(x1, y1, x2, y2) {
+            if (!linePreview) createLinePreview();
+            
+            // Calculate line length and angle
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            
+            // Position and rotate the line
+            linePreview.style.left = x1 + 'px';
+            linePreview.style.top = y1 + 'px';
+            linePreview.style.width = length + 'px';
+            linePreview.style.transform = `rotate(${angle}deg)`;
+            
+            // Calculate distance in feet
+            const distanceFeet = pixelsToFeet(length);
+            
+            // Position label at midpoint
+            const midX = (x1 + x2) / 2;
+            const midY = (y1 + y2) / 2;
+            lineLabel.style.left = midX + 'px';
+            lineLabel.style.top = (midY - 20) + 'px';
+            lineLabel.textContent = distanceFeet.toFixed(1) + ' ft';
+        }
+
+        // Background functions
+        function handleBackgroundUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    backgroundImage = e.target.result;
+                    canvas.style.backgroundImage = `url(${backgroundImage})`;
+                    canvas.style.backgroundSize = backgroundSize + '%';
+                    document.getElementById('bgControls').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeBackground() {
+            canvas.style.backgroundImage = 'none';
+            backgroundImage = null;
+            backgroundSize = 100;
+            document.getElementById('bgImageUpload').value = '';
+            document.getElementById('bgControls').style.display = 'none';
+            document.getElementById('bgSizeDisplay').textContent = '100%';
+        }
+
+        function adjustBackgroundSize(delta) {
+            backgroundSize = Math.max(10, Math.min(500, backgroundSize + delta));
+            canvas.style.backgroundSize = backgroundSize + '%';
+            document.getElementById('bgSizeDisplay').textContent = backgroundSize + '%';
+        }
+
+        // Line drawing event handlers
+        drawingCanvas.addEventListener('mousedown', (e) => {
+            const rect = drawingCanvas.getBoundingClientRect();
+            const clickX = (e.clientX - rect.left) / zoomLevel;
+            const clickY = (e.clientY - rect.top) / zoomLevel;
+            
+            // Delete mode - click to delete lines
+            if (deleteLineMode) {
+                for (let i = lines.length - 1; i >= 0; i--) {
+                    if (isPointNearLine(clickX, clickY, lines[i])) {
+                        lines.splice(i, 1);
+                        redrawLines();
+                        return;
+                    }
+                }
+                return;
+            }
+            
+            // Drawing mode - draw new lines
+            if (!lineMode) return;
+            
+            lineStartX = clickX;
+            lineStartY = clickY;
+            isDrawing = true;
+            createLinePreview();
+        });
+
+        drawingCanvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !lineMode) return;
+            const rect = drawingCanvas.getBoundingClientRect();
+            const currentX = (e.clientX - rect.left) / zoomLevel;
+            const currentY = (e.clientY - rect.top) / zoomLevel;
+            updateLinePreview(lineStartX, lineStartY, currentX, currentY);
+        });
+
+        drawingCanvas.addEventListener('mouseup', (e) => {
+            if (!isDrawing || !lineMode) return;
+            const rect = drawingCanvas.getBoundingClientRect();
+            const endX = (e.clientX - rect.left) / zoomLevel;
+            const endY = (e.clientY - rect.top) / zoomLevel;
+            
+            // Calculate distance
+            const dx = endX - lineStartX;
+            const dy = endY - lineStartY;
+            const distancePixels = Math.sqrt(dx * dx + dy * dy);
+            const distanceFeet = pixelsToFeet(distancePixels);
+            
+            // Only add line if it's significant
+            if (distancePixels > 10) {
+                lines.push({
+                    x1: lineStartX,
+                    y1: lineStartY,
+                    x2: endX,
+                    y2: endY,
+                    distance: distanceFeet
+                });
+                redrawLines();
+            }
+            
+            isDrawing = false;
+            removeLinePreview();
+        });
+
+        drawingCanvas.addEventListener('mouseleave', () => {
+            if (isDrawing) {
+                isDrawing = false;
+                removeLinePreview();
+            }
+        });
+
+        // Touch support for line drawing
+        drawingCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const rect = drawingCanvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const clickX = (touch.clientX - rect.left) / zoomLevel;
+            const clickY = (touch.clientY - rect.top) / zoomLevel;
+            
+            // Delete mode - click to delete lines
+            if (deleteLineMode) {
+                for (let i = lines.length - 1; i >= 0; i--) {
+                    if (isPointNearLine(clickX, clickY, lines[i])) {
+                        lines.splice(i, 1);
+                        redrawLines();
+                        return;
+                    }
+                }
+                return;
+            }
+            
+            // Drawing mode - draw new lines
+            if (!lineMode) return;
+            
+            lineStartX = clickX;
+            lineStartY = clickY;
+            isDrawing = true;
+            createLinePreview();
+        });
+
+        drawingCanvas.addEventListener('touchmove', (e) => {
+            if (!isDrawing || !lineMode) return;
+            e.preventDefault();
+            const rect = drawingCanvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const currentX = (touch.clientX - rect.left) / zoomLevel;
+            const currentY = (touch.clientY - rect.top) / zoomLevel;
+            updateLinePreview(lineStartX, lineStartY, currentX, currentY);
+        });
+
+        drawingCanvas.addEventListener('touchend', (e) => {
+            if (!isDrawing || !lineMode) return;
+            e.preventDefault();
+            const rect = drawingCanvas.getBoundingClientRect();
+            const touch = e.changedTouches[0];
+            const endX = (touch.clientX - rect.left) / zoomLevel;
+            const endY = (touch.clientY - rect.top) / zoomLevel;
+            
+            // Calculate distance
+            const dx = endX - lineStartX;
+            const dy = endY - lineStartY;
+            const distancePixels = Math.sqrt(dx * dx + dy * dy);
+            const distanceFeet = pixelsToFeet(distancePixels);
+            
+            // Only add line if it's significant
+            if (distancePixels > 10) {
+                lines.push({
+                    x1: lineStartX,
+                    y1: lineStartY,
+                    x2: endX,
+                    y2: endY,
+                    distance: distanceFeet
+                });
+                redrawLines();
+            }
+            
+            isDrawing = false;
+            removeLinePreview();
+        });
+    </script>
+</body>
+</html>
