@@ -49,22 +49,33 @@
         .header-content {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 20px;
         }
 
         .header-logo {
-            width: 800px;
-            height: 800px;
-            max-width: 100%;
-            height: auto;
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            flex-shrink: 0;
         }
 
         .header-text {
             text-align: center;
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .header-logo {
+                width: 100px;
+                height: 100px;
+            }
         }
 
         .nav-bar {
@@ -669,11 +680,12 @@
     <div class="container">
         <div class="header">
             <div class="header-content">
-                <img src="Occidentals.png" alt="Occidentals" class="header-logo">
+                <img src="Occidentals.png" alt="Occidentals" class="header-logo header-logo-left">
                 <div class="header-text">
                     <h1>Occidental Camp Layout</h1>
                     <p>Medieval & Historical Camp Planning for Gallows Humor Gaming</p>
                 </div>
+                <img src="Occidentals.png" alt="Occidentals" class="header-logo header-logo-right">
             </div>
         </div>
 
