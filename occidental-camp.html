@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camp Setup Planner</title>
+    <title>Occidental Camp Layout - Gallows Humor Gaming</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -23,20 +23,22 @@
             margin: 0 auto;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, #4a3728 0%, #6b4423 100%);
             color: white;
             padding: 25px 30px;
             text-align: center;
+            border-bottom: 4px solid #d4a574;
         }
 
         .header h1 {
             font-size: 2em;
             margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .header p {
@@ -45,7 +47,7 @@
         }
 
         .nav-bar {
-            background: #3d4f5f;
+            background: #5c3d2e;
             padding: 10px 30px;
             display: flex;
             gap: 15px;
@@ -53,7 +55,7 @@
         }
 
         .nav-bar a {
-            color: #a8c5db;
+            color: #f5deb3;
             text-decoration: none;
             padding: 8px 16px;
             border-radius: 4px;
@@ -67,14 +69,14 @@
         }
 
         .nav-bar a.active {
-            background: #667eea;
-            color: white;
+            background: #d4a574;
+            color: #3d2817;
         }
 
         .toolbar {
-            background: #f8f9fa;
+            background: #f8f5f0;
             padding: 20px 30px;
-            border-bottom: 2px solid #e9ecef;
+            border-bottom: 2px solid #d4a574;
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
@@ -86,7 +88,7 @@
             gap: 10px;
             align-items: center;
             padding: 5px 10px;
-            border-right: 2px solid #dee2e6;
+            border-right: 2px solid #d4a574;
         }
 
         .toolbar-group:last-child {
@@ -134,7 +136,7 @@
         .zoom-controls button {
             width: 40px;
             height: 40px;
-            background: #667eea;
+            background: #8B4513;
             color: white;
             border: none;
             border-radius: 4px;
@@ -144,7 +146,7 @@
         }
 
         .zoom-controls button:hover {
-            background: #5568d3;
+            background: #654321;
             transform: scale(1.1);
         }
 
@@ -152,7 +154,7 @@
             text-align: center;
             font-size: 12px;
             font-weight: bold;
-            color: #2c3e50;
+            color: #4a3728;
         }
 
         .compass-indicator {
@@ -160,14 +162,14 @@
             top: 5px;
             left: 50%;
             transform: translateX(-50%);
-            background: white;
+            background: #f5deb3;
             padding: 8px 12px;
             border-radius: 50%;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             z-index: 1000;
             cursor: pointer;
             transition: all 0.2s;
-            border: 2px solid #2c3e50;
+            border: 2px solid #8B4513;
         }
 
         .compass-indicator:hover {
@@ -178,7 +180,7 @@
         .compass-letter {
             font-size: 16px;
             font-weight: bold;
-            color: #2c3e50;
+            color: #4a3728;
             text-align: center;
             user-select: none;
             line-height: 1;
@@ -194,7 +196,7 @@
         }
 
         .toolbar button {
-            background: #667eea;
+            background: #8B4513;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -206,30 +208,22 @@
         }
 
         .toolbar button:hover {
-            background: #5568d3;
+            background: #654321;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.4);
         }
 
         .toolbar button.active {
-            background: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+            background: #228B22;
+            box-shadow: 0 0 0 3px rgba(34, 139, 34, 0.3);
         }
 
         .toolbar button.danger {
-            background: #e74c3c;
+            background: #8B0000;
         }
 
         .toolbar button.danger:hover {
-            background: #c0392b;
-        }
-
-        .toolbar button.border-btn {
-            background: #27ae60;
-        }
-
-        .toolbar button.border-btn:hover {
-            background: #229954;
+            background: #660000;
         }
 
         .toolbar input[type="file"] {
@@ -237,7 +231,7 @@
         }
 
         .toolbar label {
-            background: #9b59b6;
+            background: #6b4423;
             color: white;
             padding: 10px 20px;
             border-radius: 6px;
@@ -249,21 +243,21 @@
         }
 
         .toolbar label:hover {
-            background: #8e44ad;
+            background: #4a3728;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
+            box-shadow: 0 4px 12px rgba(107, 68, 35, 0.4);
         }
 
         .workspace {
             display: flex;
-            height: calc(100vh - 250px);
+            height: calc(100vh - 280px);
             min-height: 500px;
         }
 
         .canvas-container {
             flex: 1;
             position: relative;
-            background: linear-gradient(to bottom, #87ceeb 0%, #98d8c8 100%);
+            background: linear-gradient(to bottom, #c2b280 0%, #8fbc8f 100%);
             overflow: auto;
         }
 
@@ -280,8 +274,8 @@
 
         .tent {
             position: absolute;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-            border: 3px solid #c92a2a;
+            background: linear-gradient(135deg, #d4a574 0%, #c19660 100%);
+            border: 3px solid #8B4513;
             border-radius: 8px;
             cursor: move;
             user-select: none;
@@ -305,18 +299,18 @@
         }
 
         .tent-label {
-            color: white;
+            color: #3d2817;
             font-weight: bold;
             font-size: 14px;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
             padding: 5px;
             word-break: break-word;
             max-width: 90%;
         }
 
         .tent-size {
-            color: rgba(255,255,255,0.8);
+            color: rgba(61, 40, 23, 0.8);
             font-size: 11px;
             margin-top: 3px;
         }
@@ -329,8 +323,8 @@
             position: absolute;
             width: 16px;
             height: 16px;
-            background: #4CAF50;
-            border: 2px solid #2e7d32;
+            background: #228B22;
+            border: 2px solid #145214;
             border-radius: 50%;
             top: -8px;
             left: 50%;
@@ -344,7 +338,7 @@
         }
 
         .rotate-handle::before {
-            content: '↻';
+            content: '\21BB';
             position: absolute;
             top: 50%;
             left: 50%;
@@ -384,7 +378,7 @@
         .line-preview {
             position: absolute;
             height: 2px;
-            background: #2c3e50;
+            background: #4a3728;
             pointer-events: none;
             z-index: 6;
             transform-origin: left center;
@@ -392,7 +386,7 @@
 
         .line-label {
             position: absolute;
-            background: rgba(44, 62, 80, 0.9);
+            background: rgba(74, 55, 40, 0.9);
             color: white;
             padding: 4px 8px;
             border-radius: 4px;
@@ -405,15 +399,15 @@
 
         .sidebar {
             width: 300px;
-            background: #f8f9fa;
+            background: #f8f5f0;
             padding: 20px;
             overflow-y: auto;
-            border-left: 2px solid #e9ecef;
+            border-left: 2px solid #d4a574;
         }
 
         .sidebar h3 {
             margin-bottom: 15px;
-            color: #2c3e50;
+            color: #4a3728;
         }
 
         .bg-controls {
@@ -422,6 +416,7 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #d4a574;
         }
 
         .bg-controls label {
@@ -442,7 +437,7 @@
         .size-control button {
             width: 35px;
             height: 35px;
-            background: #667eea;
+            background: #8B4513;
             color: white;
             border: none;
             border-radius: 4px;
@@ -453,7 +448,7 @@
         }
 
         .size-control button:hover {
-            background: #5568d3;
+            background: #654321;
             transform: scale(1.1);
         }
 
@@ -461,7 +456,7 @@
             flex: 1;
             text-align: center;
             font-weight: 600;
-            color: #2c3e50;
+            color: #4a3728;
         }
 
         .property-group {
@@ -470,6 +465,7 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #d4a574;
         }
 
         .property-group label {
@@ -483,14 +479,14 @@
         .property-group input {
             width: 100%;
             padding: 8px;
-            border: 2px solid #ddd;
+            border: 2px solid #d4a574;
             border-radius: 4px;
             font-size: 0.95em;
         }
 
         .property-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #8B4513;
         }
 
         .size-inputs {
@@ -518,18 +514,18 @@
         }
 
         .tent-item:hover {
-            background: #e3f2fd;
-            border-color: #667eea;
+            background: #f5deb3;
+            border-color: #8B4513;
         }
 
         .tent-item.selected {
-            background: #bbdefb;
-            border-color: #667eea;
+            background: #d4a574;
+            border-color: #8B4513;
         }
 
         .tent-item-name {
             font-weight: bold;
-            color: #2c3e50;
+            color: #4a3728;
         }
 
         .tent-item-size {
@@ -557,60 +553,83 @@
             position: absolute;
             bottom: 10px;
             left: 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
+            background: rgba(74, 55, 40, 0.9);
+            color: #f5deb3;
             padding: 10px 15px;
             border-radius: 6px;
             font-size: 0.85em;
             z-index: 1000;
+        }
+
+        .camp-info {
+            background: #f5deb3;
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .camp-info h4 {
+            color: #4a3728;
+            margin-bottom: 10px;
+        }
+
+        .camp-info ul {
+            color: #5c3d2e;
+            font-size: 0.9em;
+            padding-left: 20px;
+        }
+
+        .camp-info li {
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>⛺ Camp Setup Planner</h1>
-            <p>Design your perfect campground layout</p>
+            <h1>Occidental Camp Layout</h1>
+            <p>Medieval & Historical Camp Planning for Gallows Humor Gaming</p>
         </div>
 
         <div class="nav-bar">
-            <a href="index.html" class="active">Camp Planner</a>
-            <a href="occidental-camp.html">Occidental Camp</a>
+            <a href="index.html">Camp Planner</a>
+            <a href="occidental-camp.html" class="active">Occidental Camp</a>
         </div>
 
         <div class="toolbar">
             <div class="toolbar-group">
-                <button onclick="addTent('square')">➕ Add Square Tent</button>
-                <button onclick="addTent('round')">⭕ Add Round Tent</button>
+                <button onclick="addTent('square')">Add Square Tent</button>
+                <button onclick="addTent('round')">Add Round Tent</button>
             </div>
             <div class="toolbar-group">
-                <span style="font-weight: 600; color: #2c3e50;">Tent Color:</span>
+                <span style="font-weight: 600; color: #4a3728;">Tent Color:</span>
                 <div class="color-palette">
-                    <div class="color-swatch selected" style="background: #e53e3e;" onclick="selectTentColor('red')" data-color="red"></div>
-                    <div class="color-swatch" style="background: #3182ce;" onclick="selectTentColor('blue')" data-color="blue"></div>
-                    <div class="color-swatch" style="background: #38a169;" onclick="selectTentColor('green')" data-color="green"></div>
-                    <div class="color-swatch" style="background: #d69e2e;" onclick="selectTentColor('yellow')" data-color="yellow"></div>
-                    <div class="color-swatch" style="background: #805ad5;" onclick="selectTentColor('purple')" data-color="purple"></div>
-                    <div class="color-swatch" style="background: #dd6b20;" onclick="selectTentColor('orange')" data-color="orange"></div>
+                    <div class="color-swatch" style="background: #8B4513;" onclick="selectTentColor('brown')" data-color="brown"></div>
+                    <div class="color-swatch selected" style="background: #d4a574;" onclick="selectTentColor('tan')" data-color="tan"></div>
+                    <div class="color-swatch" style="background: #8B0000;" onclick="selectTentColor('darkred')" data-color="darkred"></div>
+                    <div class="color-swatch" style="background: #2F4F4F;" onclick="selectTentColor('darkgreen')" data-color="darkgreen"></div>
+                    <div class="color-swatch" style="background: #4a3728;" onclick="selectTentColor('darkbrown')" data-color="darkbrown"></div>
+                    <div class="color-swatch" style="background: #f5f5dc;" onclick="selectTentColor('cream')" data-color="cream"></div>
                 </div>
             </div>
             <div class="toolbar-group">
-                <button id="pencilBtn" onclick="togglePencilTool()">✏️ Pencil Tool</button>
-                <button id="deletePencilBtn" onclick="toggleDeletePencilMode()">🗑️ Delete Pencil</button>
-                <button id="lineBtn" onclick="toggleLineTool()">📏 Line Tool</button>
-                <button id="deleteLineBtn" onclick="toggleDeleteLineMode()">🗑️ Delete Lines</button>
+                <button id="pencilBtn" onclick="togglePencilTool()">Pencil Tool</button>
+                <button id="deletePencilBtn" onclick="toggleDeletePencilMode()">Delete Pencil</button>
+                <button id="lineBtn" onclick="toggleLineTool()">Line Tool</button>
+                <button id="deleteLineBtn" onclick="toggleDeleteLineMode()">Delete Lines</button>
             </div>
             <div class="toolbar-group">
-                <label for="bgImageUpload">🖼️ Upload Background</label>
+                <label for="bgImageUpload">Upload Background</label>
                 <input type="file" id="bgImageUpload" accept="image/*" onchange="handleBackgroundUpload(event)">
-                <button onclick="removeBackground()">❌ Remove Background</button>
+                <button onclick="removeBackground()">Remove Background</button>
             </div>
             <div class="toolbar-group">
-                <button class="danger" onclick="deleteSelected()">🗑️ Delete Selected</button>
-                <button onclick="clearAll()">🔄 Clear All</button>
-                <label for="jsonUpload">📂 Load Layout</label>
+                <button class="danger" onclick="deleteSelected()">Delete Selected</button>
+                <button onclick="clearAll()">Clear All</button>
+                <label for="jsonUpload">Load Layout</label>
                 <input type="file" id="jsonUpload" accept="application/json,.json" onchange="handleJsonUpload(event)">
-                <button onclick="exportLayout()">💾 Export Layout</button>
+                <button onclick="exportLayout()">Export Layout</button>
             </div>
         </div>
 
@@ -626,22 +645,33 @@
                     <svg class="grid-overlay" id="gridOverlay"></svg>
                 </div>
                 <div class="hint">
-                    💡 Drag tents to move • Rotate (green handle) • Line tool measures distances in feet
+                    Drag tents to move | Rotate with green handle | Line tool measures distances in feet
                 </div>
             </div>
 
             <div class="zoom-controls">
                 <button onclick="zoomIn()">+</button>
                 <div class="zoom-level" id="zoomLevel">100%</div>
-                <button onclick="zoomOut()">−</button>
+                <button onclick="zoomOut()">-</button>
             </div>
 
             <div class="sidebar">
+                <div class="camp-info">
+                    <h4>Occidental Camp Guide</h4>
+                    <ul>
+                        <li>Main Pavilion - Central command tent</li>
+                        <li>Guard Posts - Strategic placement</li>
+                        <li>Cooking Area - Downwind location</li>
+                        <li>Storage Tents - Gear and supplies</li>
+                        <li>Sleeping Quarters - Personal tents</li>
+                    </ul>
+                </div>
+
                 <div class="bg-controls" id="bgControls" style="display: none;">
                     <h3>Background Image</h3>
                     <label>Size Control:</label>
                     <div class="size-control">
-                        <button onclick="adjustBackgroundSize(-10)">−</button>
+                        <button onclick="adjustBackgroundSize(-10)">-</button>
                         <span id="bgSizeDisplay">100%</span>
                         <button onclick="adjustBackgroundSize(10)">+</button>
                     </div>
@@ -685,15 +715,15 @@
         const minZoom = 0.3;
         const maxZoom = 3.0;
 
-        // Color variables
-        let currentTentColor = 'red';
+        // Medieval/Occidental color palette
+        let currentTentColor = 'tan';
         const tentColors = {
-            red: { bg: '#e53e3e', border: '#9b2c2c' },
-            blue: { bg: '#3182ce', border: '#2c5282' },
-            green: { bg: '#38a169', border: '#276749' },
-            yellow: { bg: '#d69e2e', border: '#975a16' },
-            purple: { bg: '#805ad5', border: '#553c9a' },
-            orange: { bg: '#dd6b20', border: '#9c4221' }
+            brown: { bg: '#8B4513', border: '#5c2d0e', textColor: '#f5deb3' },
+            tan: { bg: '#d4a574', border: '#8B4513', textColor: '#3d2817' },
+            darkred: { bg: '#8B0000', border: '#4a0000', textColor: '#f5deb3' },
+            darkgreen: { bg: '#2F4F4F', border: '#1a2f2f', textColor: '#f5deb3' },
+            darkbrown: { bg: '#4a3728', border: '#2d221a', textColor: '#f5deb3' },
+            cream: { bg: '#f5f5dc', border: '#8B4513', textColor: '#3d2817' }
         };
 
         // Compass direction
@@ -723,7 +753,7 @@
         let lastPencilY = 0;
 
         // Background variables
-        let backgroundSize = 100; // percentage
+        let backgroundSize = 100;
         let backgroundImage = null;
 
         function feetToPixels(feet) {
@@ -760,12 +790,10 @@
         // Mouse wheel zoom
         canvasContainer.addEventListener('wheel', (e) => {
             e.preventDefault();
-            
+
             if (e.deltaY < 0) {
-                // Scroll up - zoom in
                 zoomIn();
             } else {
-                // Scroll down - zoom out
                 zoomOut();
             }
         }, { passive: false });
@@ -773,8 +801,7 @@
         // Color selection
         function selectTentColor(color) {
             currentTentColor = color;
-            
-            // Update selected state
+
             document.querySelectorAll('.color-swatch').forEach(swatch => {
                 swatch.classList.remove('selected');
             });
@@ -788,6 +815,10 @@
                 const colorScheme = tentColors[color];
                 tentEl.style.background = colorScheme.bg;
                 tentEl.style.borderColor = colorScheme.border;
+                const label = tentEl.querySelector('.tent-label');
+                if (label) {
+                    label.style.color = colorScheme.textColor;
+                }
             }
         }
 
@@ -796,7 +827,7 @@
             compassIndex = (compassIndex + 1) % compassDirections.length;
             const direction = compassDirections[compassIndex];
             compassDirection = direction.letter;
-            
+
             document.getElementById('compassLetter').textContent = direction.letter;
             document.getElementById('compassLabel').textContent = direction.label;
         }
@@ -805,8 +836,8 @@
             const tent = {
                 id: `tent-${tentCounter++}`,
                 name: `Tent ${tentCounter - 1}`,
-                x: 100,
-                y: 100,
+                x: 100 + (tents.length * 30) % 200,
+                y: 100 + (tents.length * 30) % 150,
                 width: 120,
                 height: 120,
                 shape: shape,
@@ -832,20 +863,19 @@
             tentEl.style.height = tent.height + 'px';
             tentEl.style.zIndex = tent.zIndex + 10;
             tentEl.style.transform = `rotate(${tent.rotation}deg)`;
-            
-            // Apply tent color
-            const colorScheme = tentColors[tent.color] || tentColors.red;
+
+            const colorScheme = tentColors[tent.color] || tentColors.tan;
             tentEl.style.background = colorScheme.bg;
             tentEl.style.borderColor = colorScheme.border;
 
             const widthFeet = pixelsToFeet(tent.width);
             const heightFeet = pixelsToFeet(tent.height);
-            const sizeText = tent.shape === 'round' ? `${widthFeet}ft diameter` : `${widthFeet}×${heightFeet}ft`;
+            const sizeText = tent.shape === 'round' ? `${widthFeet}ft diameter` : `${widthFeet}x${heightFeet}ft`;
 
             const rotateHandle = tent.shape === 'square' ? '<div class="rotate-handle"></div>' : '';
 
             tentEl.innerHTML = `
-                <div class="tent-label">
+                <div class="tent-label" style="color: ${colorScheme.textColor}">
                     ${tent.name}
                     <div class="tent-size">${sizeText}</div>
                 </div>
@@ -874,7 +904,7 @@
         }
 
         function startDrag(tent, e) {
-            if (lineMode || pencilMode || deleteLineMode || deletePencilMode) return; // Don't drag in drawing or delete modes
+            if (lineMode || pencilMode || deleteLineMode || deletePencilMode) return;
             if (e.preventDefault) e.preventDefault();
             selectTent(tent);
             isDragging = true;
@@ -882,7 +912,6 @@
             const rect = tentEl.getBoundingClientRect();
             const clientX = e.clientX || e.pageX;
             const clientY = e.clientY || e.pageY;
-            // Calculate offset accounting for zoom
             dragOffset.x = (clientX - rect.left) / zoomLevel;
             dragOffset.y = (clientY - rect.top) / zoomLevel;
         }
@@ -892,21 +921,21 @@
             if (e.stopPropagation) e.stopPropagation();
             selectTent(tent);
             isRotating = true;
-            
+
             const clientX = e.clientX || e.pageX;
             const clientY = e.clientY || e.pageY;
-            
+
             const tentEl = document.getElementById(tent.id);
             const rect = tentEl.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            
+
             rotateStartAngle = Math.atan2(clientY - centerY, clientX - centerX) * 180 / Math.PI;
         }
 
         function handleMove(e) {
-            if (lineMode || pencilMode || deleteLineMode || deletePencilMode) return; // Don't interfere with drawing or delete modes
-            
+            if (lineMode || pencilMode || deleteLineMode || deletePencilMode) return;
+
             const clientX = e.clientX || (e.touches && e.touches[0].clientX);
             const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
@@ -914,7 +943,6 @@
 
             if (isDragging && selectedTent) {
                 const canvasRect = canvas.getBoundingClientRect();
-                // Account for zoom level when calculating position
                 let newX = (clientX - canvasRect.left) / zoomLevel - dragOffset.x;
                 let newY = (clientY - canvasRect.top) / zoomLevel - dragOffset.y;
 
@@ -932,13 +960,13 @@
                 const rect = tentEl.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
-                
+
                 const currentAngle = Math.atan2(clientY - centerY, clientX - centerX) * 180 / Math.PI;
                 const angleDiff = currentAngle - rotateStartAngle;
-                
+
                 selectedTent.rotation = (selectedTent.rotation + angleDiff + 360) % 360;
                 tentEl.style.transform = `rotate(${selectedTent.rotation}deg)`;
-                
+
                 rotateStartAngle = currentAngle;
                 updateProperties();
             }
@@ -976,11 +1004,16 @@
             const widthFeet = pixelsToFeet(selectedTent.width);
             const heightFeet = pixelsToFeet(selectedTent.height);
 
+            const colorOptions = Object.keys(tentColors).map(color => {
+                const colorScheme = tentColors[color];
+                return `<div class="color-swatch ${selectedTent.color === color ? 'selected' : ''}" style="background: ${colorScheme.bg};" onclick="changeTentColor('${color}')"></div>`;
+            }).join('');
+
             if (selectedTent.shape === 'round') {
                 document.getElementById('propertiesPanel').innerHTML = `
                     <div class="property-group">
                         <label>Tent Name:</label>
-                        <input type="text" id="tentName" value="${selectedTent.name}" 
+                        <input type="text" id="tentName" value="${selectedTent.name}"
                                onchange="updateTentName(this.value)">
                     </div>
                     <div class="property-group">
@@ -989,26 +1022,19 @@
                     </div>
                     <div class="property-group">
                         <label>Color:</label>
-                        <div class="color-palette">
-                            <div class="color-swatch ${selectedTent.color === 'red' ? 'selected' : ''}" style="background: #e53e3e;" onclick="changeTentColor('red')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'blue' ? 'selected' : ''}" style="background: #3182ce;" onclick="changeTentColor('blue')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'green' ? 'selected' : ''}" style="background: #38a169;" onclick="changeTentColor('green')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'yellow' ? 'selected' : ''}" style="background: #d69e2e;" onclick="changeTentColor('yellow')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'purple' ? 'selected' : ''}" style="background: #805ad5;" onclick="changeTentColor('purple')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'orange' ? 'selected' : ''}" style="background: #dd6b20;" onclick="changeTentColor('orange')"></div>
-                        </div>
+                        <div class="color-palette">${colorOptions}</div>
                     </div>
                     <div class="property-group">
                         <label>Diameter (feet):</label>
-                        <input type="number" id="tentDiameter" value="${widthFeet}" 
+                        <input type="number" id="tentDiameter" value="${widthFeet}"
                                min="2" step="0.5" onchange="updateTentDiameter()">
                     </div>
                     <div class="property-group">
                         <label>Position (X, Y):</label>
                         <div class="size-inputs">
-                            <input type="number" id="tentX" value="${Math.round(selectedTent.x)}" 
+                            <input type="number" id="tentX" value="${Math.round(selectedTent.x)}"
                                    min="0" onchange="updateTentPosition()">
-                            <input type="number" id="tentY" value="${Math.round(selectedTent.y)}" 
+                            <input type="number" id="tentY" value="${Math.round(selectedTent.y)}"
                                    min="0" onchange="updateTentPosition()">
                         </div>
                     </div>
@@ -1017,7 +1043,7 @@
                 document.getElementById('propertiesPanel').innerHTML = `
                     <div class="property-group">
                         <label>Tent Name:</label>
-                        <input type="text" id="tentName" value="${selectedTent.name}" 
+                        <input type="text" id="tentName" value="${selectedTent.name}"
                                onchange="updateTentName(this.value)">
                     </div>
                     <div class="property-group">
@@ -1026,35 +1052,28 @@
                     </div>
                     <div class="property-group">
                         <label>Color:</label>
-                        <div class="color-palette">
-                            <div class="color-swatch ${selectedTent.color === 'red' ? 'selected' : ''}" style="background: #e53e3e;" onclick="changeTentColor('red')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'blue' ? 'selected' : ''}" style="background: #3182ce;" onclick="changeTentColor('blue')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'green' ? 'selected' : ''}" style="background: #38a169;" onclick="changeTentColor('green')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'yellow' ? 'selected' : ''}" style="background: #d69e2e;" onclick="changeTentColor('yellow')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'purple' ? 'selected' : ''}" style="background: #805ad5;" onclick="changeTentColor('purple')"></div>
-                            <div class="color-swatch ${selectedTent.color === 'orange' ? 'selected' : ''}" style="background: #dd6b20;" onclick="changeTentColor('orange')"></div>
-                        </div>
+                        <div class="color-palette">${colorOptions}</div>
                     </div>
                     <div class="property-group">
-                        <label>Size (Width × Height in feet):</label>
+                        <label>Size (Width x Height in feet):</label>
                         <div class="size-inputs">
-                            <input type="number" id="tentWidth" value="${widthFeet}" 
+                            <input type="number" id="tentWidth" value="${widthFeet}"
                                    min="2" step="0.5" onchange="updateTentSize()">
-                            <input type="number" id="tentHeight" value="${heightFeet}" 
+                            <input type="number" id="tentHeight" value="${heightFeet}"
                                    min="2" step="0.5" onchange="updateTentSize()">
                         </div>
                     </div>
                     <div class="property-group">
                         <label>Rotation (degrees):</label>
-                        <input type="number" id="tentRotation" value="${Math.round(selectedTent.rotation)}" 
+                        <input type="number" id="tentRotation" value="${Math.round(selectedTent.rotation)}"
                                min="0" max="359" onchange="updateTentRotation()">
                     </div>
                     <div class="property-group">
                         <label>Position (X, Y):</label>
                         <div class="size-inputs">
-                            <input type="number" id="tentX" value="${Math.round(selectedTent.x)}" 
+                            <input type="number" id="tentX" value="${Math.round(selectedTent.x)}"
                                    min="0" onchange="updateTentPosition()">
-                            <input type="number" id="tentY" value="${Math.round(selectedTent.y)}" 
+                            <input type="number" id="tentY" value="${Math.round(selectedTent.y)}"
                                    min="0" onchange="updateTentPosition()">
                         </div>
                     </div>
@@ -1065,9 +1084,12 @@
         function updateTentName(name) {
             if (selectedTent) {
                 selectedTent.name = name;
-                const label = document.querySelector(`#${selectedTent.id} .tent-label`);
+                const tentEl = document.getElementById(selectedTent.id);
+                const label = tentEl.querySelector('.tent-label');
+                const colorScheme = tentColors[selectedTent.color] || tentColors.tan;
                 const sizeText = label.querySelector('.tent-size').outerHTML;
                 label.innerHTML = name + sizeText;
+                label.style.color = colorScheme.textColor;
                 updateTentList();
             }
         }
@@ -1078,16 +1100,16 @@
                 const heightFeet = parseFloat(document.getElementById('tentHeight').value);
                 selectedTent.width = Math.max(feetToPixels(2), feetToPixels(widthFeet));
                 selectedTent.height = Math.max(feetToPixels(2), feetToPixels(heightFeet));
-                
+
                 const tentEl = document.getElementById(selectedTent.id);
                 tentEl.style.width = selectedTent.width + 'px';
                 tentEl.style.height = selectedTent.height + 'px';
-                
+
                 const sizeLabel = tentEl.querySelector('.tent-size');
                 if (sizeLabel) {
                     const newWidthFeet = pixelsToFeet(selectedTent.width);
                     const newHeightFeet = pixelsToFeet(selectedTent.height);
-                    sizeLabel.textContent = `${newWidthFeet}×${newHeightFeet}ft`;
+                    sizeLabel.textContent = `${newWidthFeet}x${newHeightFeet}ft`;
                 }
             }
         }
@@ -1098,11 +1120,11 @@
                 const diameter = Math.max(feetToPixels(2), feetToPixels(diameterFeet));
                 selectedTent.width = diameter;
                 selectedTent.height = diameter;
-                
+
                 const tentEl = document.getElementById(selectedTent.id);
                 tentEl.style.width = diameter + 'px';
                 tentEl.style.height = diameter + 'px';
-                
+
                 const sizeLabel = tentEl.querySelector('.tent-size');
                 if (sizeLabel) {
                     const newDiameterFeet = pixelsToFeet(diameter);
@@ -1114,9 +1136,9 @@
         function updateTentRotation() {
             if (selectedTent && selectedTent.shape === 'square') {
                 let rotation = parseInt(document.getElementById('tentRotation').value);
-                rotation = ((rotation % 360) + 360) % 360; // Normalize to 0-359
+                rotation = ((rotation % 360) + 360) % 360;
                 selectedTent.rotation = rotation;
-                
+
                 const tentEl = document.getElementById(selectedTent.id);
                 tentEl.style.transform = `rotate(${rotation}deg)`;
             }
@@ -1128,7 +1150,7 @@
                 const y = parseInt(document.getElementById('tentY').value);
                 selectedTent.x = Math.max(0, x);
                 selectedTent.y = Math.max(0, y);
-                
+
                 const tentEl = document.getElementById(selectedTent.id);
                 tentEl.style.left = selectedTent.x + 'px';
                 tentEl.style.top = selectedTent.y + 'px';
@@ -1140,10 +1162,10 @@
             listEl.innerHTML = tents.map(tent => {
                 const widthFeet = pixelsToFeet(tent.width);
                 const heightFeet = pixelsToFeet(tent.height);
-                const sizeText = tent.shape === 'round' ? `${widthFeet}ft ⭕` : `${widthFeet}×${heightFeet}ft`;
-                
+                const sizeText = tent.shape === 'round' ? `${widthFeet}ft` : `${widthFeet}x${heightFeet}ft`;
+
                 return `
-                    <div class="tent-item ${tent === selectedTent ? 'selected' : ''}" 
+                    <div class="tent-item ${tent === selectedTent ? 'selected' : ''}"
                          onclick="selectTentById('${tent.id}')">
                         <div class="tent-item-name">${tent.name}</div>
                         <div class="tent-item-size">${sizeText}</div>
@@ -1175,25 +1197,23 @@
                 pencilStrokes = [];
                 selectedTent = null;
                 canvas.innerHTML = '<canvas class="drawing-canvas" id="pencilCanvas"></canvas><canvas class="drawing-canvas" id="drawingCanvas"></canvas><svg class="grid-overlay" id="gridOverlay"></svg>';
-                
-                // Reinitialize drawing canvas
+
                 drawingCanvas = document.getElementById('drawingCanvas');
                 drawingCtx = drawingCanvas.getContext('2d');
                 drawingCanvas.width = canvas.offsetWidth;
                 drawingCanvas.height = canvas.offsetHeight;
                 drawingCtx.lineWidth = 2;
                 drawingCtx.lineCap = 'round';
-                drawingCtx.strokeStyle = '#2c3e50';
-                
-                // Reinitialize pencil canvas
+                drawingCtx.strokeStyle = '#4a3728';
+
                 pencilCanvas = document.getElementById('pencilCanvas');
                 pencilCtx = pencilCanvas.getContext('2d');
                 pencilCanvas.width = canvas.offsetWidth;
                 pencilCanvas.height = canvas.offsetHeight;
                 pencilCtx.lineWidth = 3;
                 pencilCtx.lineCap = 'round';
-                pencilCtx.strokeStyle = '#e74c3c';
-                
+                pencilCtx.strokeStyle = '#8B0000';
+
                 updateProperties();
                 updateTentList();
             }
@@ -1217,14 +1237,14 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'camp-layout.json';
+            a.download = 'occidental-camp-layout.json';
             a.click();
         }
 
         function handleJsonUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
@@ -1237,39 +1257,34 @@
                 }
             };
             reader.readAsText(file);
-            
-            // Reset input so same file can be loaded again
+
             event.target.value = '';
         }
 
         function loadLayout(data) {
-            // Clear existing layout
             tents = [];
             lines = [];
             pencilStrokes = [];
             selectedTent = null;
-            
-            // Clear canvas
+
             canvas.innerHTML = '<canvas class="drawing-canvas" id="pencilCanvas"></canvas><canvas class="drawing-canvas" id="drawingCanvas"></canvas><svg class="grid-overlay" id="gridOverlay"></svg>';
-            
-            // Reinitialize canvases
+
             drawingCanvas = document.getElementById('drawingCanvas');
             drawingCtx = drawingCanvas.getContext('2d');
             drawingCanvas.width = canvas.offsetWidth;
             drawingCanvas.height = canvas.offsetHeight;
             drawingCtx.lineWidth = 2;
             drawingCtx.lineCap = 'round';
-            drawingCtx.strokeStyle = '#2c3e50';
-            
+            drawingCtx.strokeStyle = '#4a3728';
+
             pencilCanvas = document.getElementById('pencilCanvas');
             pencilCtx = pencilCanvas.getContext('2d');
             pencilCanvas.width = canvas.offsetWidth;
             pencilCanvas.height = canvas.offsetHeight;
             pencilCtx.lineWidth = 3;
             pencilCtx.lineCap = 'round';
-            pencilCtx.strokeStyle = '#e74c3c';
-            
-            // Load tents
+            pencilCtx.strokeStyle = '#8B0000';
+
             if (data.tents) {
                 tentCounter = 1;
                 data.tents.forEach(tentData => {
@@ -1282,27 +1297,24 @@
                         height: tentData.height || 120,
                         shape: tentData.shape || 'square',
                         rotation: tentData.rotation || 0,
-                        color: tentData.color || 'red',
+                        color: tentData.color || 'tan',
                         zIndex: tents.length
                     };
                     tents.push(tent);
                     renderTent(tent);
                 });
             }
-            
-            // Load lines
+
             if (data.lines) {
                 lines = data.lines;
                 redrawLines();
             }
-            
-            // Load pencil strokes
+
             if (data.pencilStrokes) {
                 pencilStrokes = data.pencilStrokes;
                 redrawPencil();
             }
-            
-            // Load background image
+
             if (data.backgroundImage) {
                 backgroundImage = data.backgroundImage;
                 canvas.style.backgroundImage = `url(${backgroundImage})`;
@@ -1313,8 +1325,7 @@
             } else {
                 removeBackground();
             }
-            
-            // Load compass direction
+
             if (data.compassDirection) {
                 compassDirection = data.compassDirection;
                 const dirIndex = compassDirections.findIndex(d => d.letter === compassDirection);
@@ -1324,20 +1335,10 @@
                     document.getElementById('compassLabel').textContent = compassDirections[dirIndex].label;
                 }
             }
-            
+
             updateTentList();
             updateProperties();
         }
-
-        // Initialize with example tents
-        addTent('square');
-        addTent('round');
-        tents[1].x = 250;
-        tents[1].y = 150;
-        const tent1El = document.getElementById(tents[1].id);
-        tent1El.style.left = '250px';
-        tent1El.style.top = '150px';
-        updateTentList();
 
         // Initialize drawing canvas
         drawingCanvas = document.getElementById('drawingCanvas');
@@ -1346,7 +1347,7 @@
         drawingCanvas.height = canvas.offsetHeight;
         drawingCtx.lineWidth = 2;
         drawingCtx.lineCap = 'round';
-        drawingCtx.strokeStyle = '#2c3e50';
+        drawingCtx.strokeStyle = '#4a3728';
 
         // Initialize pencil canvas
         pencilCanvas = document.getElementById('pencilCanvas');
@@ -1355,7 +1356,7 @@
         pencilCanvas.height = canvas.offsetHeight;
         pencilCtx.lineWidth = 3;
         pencilCtx.lineCap = 'round';
-        pencilCtx.strokeStyle = '#e74c3c';
+        pencilCtx.strokeStyle = '#8B0000';
 
         // Pencil tool functions
         function togglePencilTool() {
@@ -1364,9 +1365,8 @@
             const lineBtn = document.getElementById('lineBtn');
             const deletePencilBtn = document.getElementById('deletePencilBtn');
             const canvasEl = document.getElementById('canvas');
-            
+
             if (pencilMode) {
-                // Turn off line mode if it's on
                 if (lineMode) {
                     lineMode = false;
                     lineBtn.classList.remove('active');
@@ -1374,8 +1374,7 @@
                     drawingCanvas.classList.remove('active');
                     removeLinePreview();
                 }
-                
-                // Turn off delete modes
+
                 if (deletePencilMode) {
                     deletePencilMode = false;
                     deletePencilBtn.classList.remove('active');
@@ -1384,7 +1383,7 @@
                     deleteLineMode = false;
                     document.getElementById('deleteLineBtn').classList.remove('active');
                 }
-                
+
                 pencilBtn.classList.add('active');
                 canvasEl.classList.add('pencil-mode');
                 pencilCanvas.classList.add('pencil-active');
@@ -1400,9 +1399,8 @@
             const deletePencilBtn = document.getElementById('deletePencilBtn');
             const pencilBtn = document.getElementById('pencilBtn');
             const canvasEl = document.getElementById('canvas');
-            
+
             if (deletePencilMode) {
-                // Turn off drawing modes
                 if (pencilMode) {
                     pencilMode = false;
                     pencilBtn.classList.remove('active');
@@ -1420,7 +1418,7 @@
                     deleteLineMode = false;
                     document.getElementById('deleteLineBtn').classList.remove('active');
                 }
-                
+
                 deletePencilBtn.classList.add('active');
                 pencilCanvas.classList.add('pencil-active');
             } else {
@@ -1431,10 +1429,10 @@
 
         function redrawPencil() {
             pencilCtx.clearRect(0, 0, pencilCanvas.width, pencilCanvas.height);
-            pencilCtx.strokeStyle = '#e74c3c';
+            pencilCtx.strokeStyle = '#8B0000';
             pencilCtx.lineWidth = 3;
             pencilCtx.lineCap = 'round';
-            
+
             pencilStrokes.forEach(stroke => {
                 if (stroke.length < 2) return;
                 pencilCtx.beginPath();
@@ -1461,15 +1459,15 @@
             const B = py - y1;
             const C = x2 - x1;
             const D = y2 - y1;
-            
+
             const dot = A * C + B * D;
             const lenSq = C * C + D * D;
             let param = -1;
-            
+
             if (lenSq !== 0) param = dot / lenSq;
-            
+
             let xx, yy;
-            
+
             if (param < 0) {
                 xx = x1;
                 yy = y1;
@@ -1480,7 +1478,7 @@
                 xx = x1 + param * C;
                 yy = y1 + param * D;
             }
-            
+
             const dx = px - xx;
             const dy = py - yy;
             return Math.sqrt(dx * dx + dy * dy);
@@ -1491,8 +1489,7 @@
             const rect = pencilCanvas.getBoundingClientRect();
             const clickX = (e.clientX - rect.left) / zoomLevel;
             const clickY = (e.clientY - rect.top) / zoomLevel;
-            
-            // Delete mode - click to delete strokes
+
             if (deletePencilMode) {
                 for (let i = pencilStrokes.length - 1; i >= 0; i--) {
                     if (isPointNearStroke(clickX, clickY, pencilStrokes[i])) {
@@ -1503,10 +1500,9 @@
                 }
                 return;
             }
-            
-            // Drawing mode - draw new strokes
+
             if (!pencilMode) return;
-            
+
             isDrawing = true;
             currentStroke = [{x: clickX, y: clickY}];
             lastPencilX = clickX;
@@ -1518,14 +1514,14 @@
             const rect = pencilCanvas.getBoundingClientRect();
             const currentX = (e.clientX - rect.left) / zoomLevel;
             const currentY = (e.clientY - rect.top) / zoomLevel;
-            
+
             currentStroke.push({x: currentX, y: currentY});
-            
+
             pencilCtx.beginPath();
             pencilCtx.moveTo(lastPencilX, lastPencilY);
             pencilCtx.lineTo(currentX, currentY);
             pencilCtx.stroke();
-            
+
             lastPencilX = currentX;
             lastPencilY = currentY;
         });
@@ -1553,8 +1549,7 @@
             const touch = e.touches[0];
             const clickX = (touch.clientX - rect.left) / zoomLevel;
             const clickY = (touch.clientY - rect.top) / zoomLevel;
-            
-            // Delete mode - click to delete strokes
+
             if (deletePencilMode) {
                 for (let i = pencilStrokes.length - 1; i >= 0; i--) {
                     if (isPointNearStroke(clickX, clickY, pencilStrokes[i])) {
@@ -1565,10 +1560,9 @@
                 }
                 return;
             }
-            
-            // Drawing mode - draw new strokes
+
             if (!pencilMode) return;
-            
+
             isDrawing = true;
             currentStroke = [{x: clickX, y: clickY}];
             lastPencilX = clickX;
@@ -1582,14 +1576,14 @@
             const touch = e.touches[0];
             const currentX = (touch.clientX - rect.left) / zoomLevel;
             const currentY = (touch.clientY - rect.top) / zoomLevel;
-            
+
             currentStroke.push({x: currentX, y: currentY});
-            
+
             pencilCtx.beginPath();
             pencilCtx.moveTo(lastPencilX, lastPencilY);
             pencilCtx.lineTo(currentX, currentY);
             pencilCtx.stroke();
-            
+
             lastPencilX = currentX;
             lastPencilY = currentY;
         });
@@ -1609,17 +1603,15 @@
             const pencilBtn = document.getElementById('pencilBtn');
             const deleteLineBtn = document.getElementById('deleteLineBtn');
             const canvasEl = document.getElementById('canvas');
-            
+
             if (lineMode) {
-                // Turn off pencil mode if it's on
                 if (pencilMode) {
                     pencilMode = false;
                     pencilBtn.classList.remove('active');
                     canvasEl.classList.remove('pencil-mode');
                     pencilCanvas.classList.remove('pencil-active');
                 }
-                
-                // Turn off delete modes
+
                 if (deletePencilMode) {
                     deletePencilMode = false;
                     document.getElementById('deletePencilBtn').classList.remove('active');
@@ -1628,7 +1620,7 @@
                     deleteLineMode = false;
                     deleteLineBtn.classList.remove('active');
                 }
-                
+
                 btn.classList.add('active');
                 canvasEl.classList.add('line-mode');
                 drawingCanvas.classList.add('active');
@@ -1645,9 +1637,8 @@
             const deleteLineBtn = document.getElementById('deleteLineBtn');
             const lineBtn = document.getElementById('lineBtn');
             const canvasEl = document.getElementById('canvas');
-            
+
             if (deleteLineMode) {
-                // Turn off drawing modes
                 if (lineMode) {
                     lineMode = false;
                     lineBtn.classList.remove('active');
@@ -1665,7 +1656,7 @@
                     deletePencilMode = false;
                     document.getElementById('deletePencilBtn').classList.remove('active');
                 }
-                
+
                 deleteLineBtn.classList.add('active');
                 drawingCanvas.classList.add('active');
             } else {
@@ -1685,27 +1676,26 @@
 
         function redrawLines() {
             drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-            drawingCtx.strokeStyle = '#2c3e50';
+            drawingCtx.strokeStyle = '#4a3728';
             drawingCtx.lineWidth = 2;
-            
+
             lines.forEach(line => {
                 drawingCtx.beginPath();
                 drawingCtx.moveTo(line.x1, line.y1);
                 drawingCtx.lineTo(line.x2, line.y2);
                 drawingCtx.stroke();
-                
-                // Draw distance label
+
                 const midX = (line.x1 + line.x2) / 2;
                 const midY = (line.y1 + line.y2) / 2;
-                drawingCtx.fillStyle = 'rgba(44, 62, 80, 0.9)';
+                drawingCtx.fillStyle = 'rgba(74, 55, 40, 0.9)';
                 drawingCtx.font = 'bold 12px Arial';
                 drawingCtx.textAlign = 'center';
                 drawingCtx.textBaseline = 'middle';
-                
+
                 const distanceFeet = line.distance.toFixed(1);
                 const textWidth = drawingCtx.measureText(distanceFeet + ' ft').width;
                 drawingCtx.fillRect(midX - textWidth/2 - 4, midY - 8, textWidth + 8, 16);
-                
+
                 drawingCtx.fillStyle = 'white';
                 drawingCtx.fillText(distanceFeet + ' ft', midX, midY);
             });
@@ -1737,23 +1727,19 @@
 
         function updateLinePreview(x1, y1, x2, y2) {
             if (!linePreview) createLinePreview();
-            
-            // Calculate line length and angle
+
             const dx = x2 - x1;
             const dy = y2 - y1;
             const length = Math.sqrt(dx * dx + dy * dy);
             const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-            
-            // Position and rotate the line
+
             linePreview.style.left = x1 + 'px';
             linePreview.style.top = y1 + 'px';
             linePreview.style.width = length + 'px';
             linePreview.style.transform = `rotate(${angle}deg)`;
-            
-            // Calculate distance in feet
+
             const distanceFeet = pixelsToFeet(length);
-            
-            // Position label at midpoint
+
             const midX = (x1 + x2) / 2;
             const midY = (y1 + y2) / 2;
             lineLabel.style.left = midX + 'px';
@@ -1796,8 +1782,7 @@
             const rect = drawingCanvas.getBoundingClientRect();
             const clickX = (e.clientX - rect.left) / zoomLevel;
             const clickY = (e.clientY - rect.top) / zoomLevel;
-            
-            // Delete mode - click to delete lines
+
             if (deleteLineMode) {
                 for (let i = lines.length - 1; i >= 0; i--) {
                     if (isPointNearLine(clickX, clickY, lines[i])) {
@@ -1808,10 +1793,9 @@
                 }
                 return;
             }
-            
-            // Drawing mode - draw new lines
+
             if (!lineMode) return;
-            
+
             lineStartX = clickX;
             lineStartY = clickY;
             isDrawing = true;
@@ -1831,14 +1815,12 @@
             const rect = drawingCanvas.getBoundingClientRect();
             const endX = (e.clientX - rect.left) / zoomLevel;
             const endY = (e.clientY - rect.top) / zoomLevel;
-            
-            // Calculate distance
+
             const dx = endX - lineStartX;
             const dy = endY - lineStartY;
             const distancePixels = Math.sqrt(dx * dx + dy * dy);
             const distanceFeet = pixelsToFeet(distancePixels);
-            
-            // Only add line if it's significant
+
             if (distancePixels > 10) {
                 lines.push({
                     x1: lineStartX,
@@ -1849,7 +1831,7 @@
                 });
                 redrawLines();
             }
-            
+
             isDrawing = false;
             removeLinePreview();
         });
@@ -1868,8 +1850,7 @@
             const touch = e.touches[0];
             const clickX = (touch.clientX - rect.left) / zoomLevel;
             const clickY = (touch.clientY - rect.top) / zoomLevel;
-            
-            // Delete mode - click to delete lines
+
             if (deleteLineMode) {
                 for (let i = lines.length - 1; i >= 0; i--) {
                     if (isPointNearLine(clickX, clickY, lines[i])) {
@@ -1880,10 +1861,9 @@
                 }
                 return;
             }
-            
-            // Drawing mode - draw new lines
+
             if (!lineMode) return;
-            
+
             lineStartX = clickX;
             lineStartY = clickY;
             isDrawing = true;
@@ -1907,14 +1887,12 @@
             const touch = e.changedTouches[0];
             const endX = (touch.clientX - rect.left) / zoomLevel;
             const endY = (touch.clientY - rect.top) / zoomLevel;
-            
-            // Calculate distance
+
             const dx = endX - lineStartX;
             const dy = endY - lineStartY;
             const distancePixels = Math.sqrt(dx * dx + dy * dy);
             const distanceFeet = pixelsToFeet(distancePixels);
-            
-            // Only add line if it's significant
+
             if (distancePixels > 10) {
                 lines.push({
                     x1: lineStartX,
@@ -1925,10 +1903,161 @@
                 });
                 redrawLines();
             }
-            
+
             isDrawing = false;
             removeLinePreview();
         });
+
+        // Initialize with default Occidental Camp layout
+        function initializeOccidentalCamp() {
+            // Main Pavilion (Command Tent)
+            const mainPavilion = {
+                id: `tent-${tentCounter++}`,
+                name: 'Main Pavilion',
+                x: 400,
+                y: 300,
+                width: 200,
+                height: 150,
+                shape: 'square',
+                rotation: 0,
+                color: 'darkred',
+                zIndex: tents.length
+            };
+            tents.push(mainPavilion);
+            renderTent(mainPavilion);
+
+            // Guard Post 1 (North)
+            const guard1 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Guard Post N',
+                x: 450,
+                y: 100,
+                width: 80,
+                height: 80,
+                shape: 'round',
+                rotation: 0,
+                color: 'darkgreen',
+                zIndex: tents.length
+            };
+            tents.push(guard1);
+            renderTent(guard1);
+
+            // Guard Post 2 (South)
+            const guard2 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Guard Post S',
+                x: 450,
+                y: 550,
+                width: 80,
+                height: 80,
+                shape: 'round',
+                rotation: 0,
+                color: 'darkgreen',
+                zIndex: tents.length
+            };
+            tents.push(guard2);
+            renderTent(guard2);
+
+            // Cooking Area
+            const cooking = {
+                id: `tent-${tentCounter++}`,
+                name: 'Cooking Area',
+                x: 700,
+                y: 280,
+                width: 120,
+                height: 100,
+                shape: 'square',
+                rotation: 0,
+                color: 'brown',
+                zIndex: tents.length
+            };
+            tents.push(cooking);
+            renderTent(cooking);
+
+            // Storage Tent 1
+            const storage1 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Storage',
+                x: 150,
+                y: 250,
+                width: 100,
+                height: 80,
+                shape: 'square',
+                rotation: 0,
+                color: 'darkbrown',
+                zIndex: tents.length
+            };
+            tents.push(storage1);
+            renderTent(storage1);
+
+            // Sleeping Quarters 1
+            const sleep1 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Quarters A',
+                x: 200,
+                y: 450,
+                width: 100,
+                height: 100,
+                shape: 'square',
+                rotation: 0,
+                color: 'tan',
+                zIndex: tents.length
+            };
+            tents.push(sleep1);
+            renderTent(sleep1);
+
+            // Sleeping Quarters 2
+            const sleep2 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Quarters B',
+                x: 320,
+                y: 500,
+                width: 100,
+                height: 100,
+                shape: 'square',
+                rotation: 0,
+                color: 'tan',
+                zIndex: tents.length
+            };
+            tents.push(sleep2);
+            renderTent(sleep2);
+
+            // Sleeping Quarters 3
+            const sleep3 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Quarters C',
+                x: 580,
+                y: 500,
+                width: 100,
+                height: 100,
+                shape: 'square',
+                rotation: 0,
+                color: 'tan',
+                zIndex: tents.length
+            };
+            tents.push(sleep3);
+            renderTent(sleep3);
+
+            // Meeting Circle (Round)
+            const meeting = {
+                id: `tent-${tentCounter++}`,
+                name: 'Meeting Area',
+                x: 680,
+                y: 450,
+                width: 100,
+                height: 100,
+                shape: 'round',
+                rotation: 0,
+                color: 'cream',
+                zIndex: tents.length
+            };
+            tents.push(meeting);
+            renderTent(meeting);
+
+            updateTentList();
+        }
+
+        initializeOccidentalCamp();
     </script>
 </body>
 </html>
