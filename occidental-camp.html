@@ -631,6 +631,11 @@
                 <input type="file" id="jsonUpload" accept="application/json,.json" onchange="handleJsonUpload(event)">
                 <button onclick="exportLayout()">Export Layout</button>
             </div>
+            <div class="toolbar-group">
+                <button onclick="saveToBrowser()" title="Save your camp layout to browser storage">Save to Browser</button>
+                <button onclick="loadFromBrowser()" title="Load saved layout from browser storage">Load Saved</button>
+                <button onclick="exportAsImage()" title="Export camp as PNG image">Export Image</button>
+            </div>
         </div>
 
         <div class="workspace">
@@ -1338,6 +1343,224 @@
 
             updateTentList();
             updateProperties();
+        }
+
+        // Browser localStorage save/load functions
+        const STORAGE_KEY = 'occidentalCampLayout';
+
+        function saveToBrowser() {
+            const data = {
+                tents: tents.map(tent => ({
+                    ...tent,
+                    widthFeet: pixelsToFeet(tent.width),
+                    heightFeet: pixelsToFeet(tent.height)
+                })),
+                lines: lines,
+                pencilStrokes: pencilStrokes,
+                backgroundImage: backgroundImage,
+                backgroundSize: backgroundSize,
+                compassDirection: compassDirection,
+                savedAt: new Date().toISOString()
+            };
+
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                alert('Camp layout saved to browser storage!');
+            } catch (error) {
+                if (error.name === 'QuotaExceededError') {
+                    alert('Unable to save: Storage quota exceeded. Try removing the background image or clearing browser data.');
+                } else {
+                    alert('Error saving layout: ' + error.message);
+                }
+                console.error('Error saving to localStorage:', error);
+            }
+        }
+
+        function loadFromBrowser() {
+            try {
+                const savedData = localStorage.getItem(STORAGE_KEY);
+                if (!savedData) {
+                    alert('No saved layout found in browser storage.');
+                    return;
+                }
+
+                const data = JSON.parse(savedData);
+                const savedDate = data.savedAt ? new Date(data.savedAt).toLocaleString() : 'Unknown';
+
+                if (confirm(`Load saved layout from ${savedDate}?\n\nThis will replace your current layout.`)) {
+                    loadLayout(data);
+                    alert('Layout loaded successfully!');
+                }
+            } catch (error) {
+                alert('Error loading saved layout: ' + error.message);
+                console.error('Error loading from localStorage:', error);
+            }
+        }
+
+        function clearBrowserSave() {
+            if (confirm('Remove saved layout from browser storage?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                alert('Saved layout removed from browser storage.');
+            }
+        }
+
+        // Export as image function
+        function exportAsImage() {
+            // Create a temporary canvas to composite all layers
+            const exportCanvas = document.createElement('canvas');
+            const canvasWidth = 3000;
+            const canvasHeight = 2000;
+            exportCanvas.width = canvasWidth;
+            exportCanvas.height = canvasHeight;
+            const ctx = exportCanvas.getContext('2d');
+
+            // Draw background gradient (sandy to green)
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+            gradient.addColorStop(0, '#c2b280');
+            gradient.addColorStop(1, '#8fbc8f');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+            // Draw background image if exists
+            if (backgroundImage) {
+                const img = new Image();
+                img.onload = function() {
+                    const imgWidth = (img.width * backgroundSize) / 100;
+                    const imgHeight = (img.height * backgroundSize) / 100;
+                    const imgX = (canvasWidth - imgWidth) / 2;
+                    const imgY = (canvasHeight - imgHeight) / 2;
+                    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+                    continueExport();
+                };
+                img.src = backgroundImage;
+            } else {
+                continueExport();
+            }
+
+            function continueExport() {
+                // Draw pencil strokes
+                ctx.strokeStyle = '#8B0000';
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+                pencilStrokes.forEach(stroke => {
+                    if (stroke.length < 2) return;
+                    ctx.beginPath();
+                    ctx.moveTo(stroke[0].x, stroke[0].y);
+                    for (let i = 1; i < stroke.length; i++) {
+                        ctx.lineTo(stroke[i].x, stroke[i].y);
+                    }
+                    ctx.stroke();
+                });
+
+                // Draw lines with labels
+                ctx.strokeStyle = '#4a3728';
+                ctx.lineWidth = 2;
+                lines.forEach(line => {
+                    ctx.beginPath();
+                    ctx.moveTo(line.x1, line.y1);
+                    ctx.lineTo(line.x2, line.y2);
+                    ctx.stroke();
+
+                    // Draw distance label
+                    const midX = (line.x1 + line.x2) / 2;
+                    const midY = (line.y1 + line.y2) / 2;
+                    const distanceFeet = line.distance.toFixed(1);
+                    ctx.font = 'bold 12px Arial';
+                    const textWidth = ctx.measureText(distanceFeet + ' ft').width;
+
+                    ctx.fillStyle = 'rgba(74, 55, 40, 0.9)';
+                    ctx.fillRect(midX - textWidth/2 - 4, midY - 8, textWidth + 8, 16);
+
+                    ctx.fillStyle = 'white';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(distanceFeet + ' ft', midX, midY);
+                });
+
+                // Draw tents
+                tents.forEach(tent => {
+                    ctx.save();
+
+                    const centerX = tent.x + tent.width / 2;
+                    const centerY = tent.y + tent.height / 2;
+
+                    ctx.translate(centerX, centerY);
+                    ctx.rotate((tent.rotation * Math.PI) / 180);
+                    ctx.translate(-centerX, -centerY);
+
+                    const colorScheme = tentColors[tent.color] || tentColors.tan;
+
+                    // Draw tent shape
+                    ctx.fillStyle = colorScheme.bg;
+                    ctx.strokeStyle = colorScheme.border;
+                    ctx.lineWidth = 3;
+
+                    if (tent.shape === 'round') {
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, tent.width / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.stroke();
+                    } else {
+                        ctx.beginPath();
+                        ctx.roundRect(tent.x, tent.y, tent.width, tent.height, 8);
+                        ctx.fill();
+                        ctx.stroke();
+                    }
+
+                    // Draw tent label
+                    ctx.fillStyle = colorScheme.textColor;
+                    ctx.font = 'bold 14px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(tent.name, centerX, centerY - 8);
+
+                    // Draw size text
+                    ctx.font = '11px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                    ctx.fillStyle = colorScheme.textColor;
+                    ctx.globalAlpha = 0.8;
+                    const widthFeet = pixelsToFeet(tent.width);
+                    const heightFeet = pixelsToFeet(tent.height);
+                    const sizeText = tent.shape === 'round' ? `${widthFeet}ft diameter` : `${widthFeet}x${heightFeet}ft`;
+                    ctx.fillText(sizeText, centerX, centerY + 10);
+                    ctx.globalAlpha = 1;
+
+                    ctx.restore();
+                });
+
+                // Draw compass indicator
+                ctx.save();
+                const compassX = canvasWidth / 2;
+                const compassY = 40;
+
+                // Compass background
+                ctx.fillStyle = '#f5deb3';
+                ctx.strokeStyle = '#8B4513';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(compassX, compassY, 25, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Compass letter
+                ctx.fillStyle = '#4a3728';
+                ctx.font = 'bold 16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(compassDirection, compassX, compassY - 2);
+
+                // Compass label
+                const directionLabels = { 'N': 'North', 'E': 'East', 'S': 'South', 'W': 'West' };
+                ctx.font = '7px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                ctx.fillStyle = '#666';
+                ctx.fillText(directionLabels[compassDirection] || '', compassX, compassY + 12);
+                ctx.restore();
+
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'occidental-camp-layout.png';
+                link.href = exportCanvas.toDataURL('image/png');
+                link.click();
+            }
         }
 
         // Initialize drawing canvas
