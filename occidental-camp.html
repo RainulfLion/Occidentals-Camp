@@ -46,6 +46,27 @@
             font-size: 0.95em;
         }
 
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .header-logo {
+            width: 800px;
+            height: 800px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .header-text {
+            text-align: center;
+        }
+
         .nav-bar {
             background: #5c3d2e;
             padding: 10px 30px;
@@ -572,24 +593,88 @@
         .camp-info h4 {
             color: #4a3728;
             margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .camp-info ul {
             color: #5c3d2e;
             font-size: 0.9em;
-            padding-left: 20px;
+            padding-left: 0;
+            list-style: none;
         }
 
         .camp-info li {
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guide-item {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #c4956a;
+            border-radius: 4px;
+            background: #fff8f0;
+            color: #5c3d2e;
+            font-size: 0.9em;
+            font-family: inherit;
+        }
+
+        .guide-item:focus {
+            outline: none;
+            border-color: #8B4513;
+            box-shadow: 0 0 4px rgba(139, 69, 19, 0.3);
+        }
+
+        .guide-delete-btn {
+            background: #8B0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .guide-delete-btn:hover {
+            background: #a00000;
+        }
+
+        .guide-add-btn {
+            background: #4a3728;
+            color: #f5deb3;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .guide-add-btn:hover {
+            background: #5c3d2e;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Occidental Camp Layout</h1>
-            <p>Medieval & Historical Camp Planning for Gallows Humor Gaming</p>
+            <div class="header-content">
+                <img src="Occidentals.png" alt="Occidentals" class="header-logo">
+                <div class="header-text">
+                    <h1>Occidental Camp Layout</h1>
+                    <p>Medieval & Historical Camp Planning for Gallows Humor Gaming</p>
+                </div>
+            </div>
         </div>
 
         <div class="nav-bar">
@@ -663,13 +748,14 @@
             <div class="sidebar">
                 <div class="camp-info">
                     <h4>Occidental Camp Guide</h4>
-                    <ul>
-                        <li>Main Pavilion - Central command tent</li>
-                        <li>Guard Posts - Strategic placement</li>
-                        <li>Cooking Area - Downwind location</li>
-                        <li>Storage Tents - Gear and supplies</li>
-                        <li>Sleeping Quarters - Personal tents</li>
+                    <ul id="campGuideList">
+                        <li><input type="text" class="guide-item" value="Main Pavilion - Central command tent"><button class="guide-delete-btn" onclick="deleteGuideItem(this)">&times;</button></li>
+                        <li><input type="text" class="guide-item" value="Guard Posts - Strategic placement"><button class="guide-delete-btn" onclick="deleteGuideItem(this)">&times;</button></li>
+                        <li><input type="text" class="guide-item" value="Cooking Area - Downwind location"><button class="guide-delete-btn" onclick="deleteGuideItem(this)">&times;</button></li>
+                        <li><input type="text" class="guide-item" value="Storage Tents - Gear and supplies"><button class="guide-delete-btn" onclick="deleteGuideItem(this)">&times;</button></li>
+                        <li><input type="text" class="guide-item" value="Sleeping Quarters - Personal tents"><button class="guide-delete-btn" onclick="deleteGuideItem(this)">&times;</button></li>
                     </ul>
+                    <button class="guide-add-btn" onclick="addGuideItem()">+ Add Item</button>
                 </div>
 
                 <div class="bg-controls" id="bgControls" style="display: none;">
@@ -825,6 +911,62 @@
                     label.style.color = colorScheme.textColor;
                 }
             }
+        }
+
+        // Camp Guide functions
+        function addGuideItem() {
+            const list = document.getElementById('campGuideList');
+            const li = document.createElement('li');
+            li.innerHTML = '<input type="text" class="guide-item" value="" placeholder="Enter guide item..."><button class="guide-delete-btn" onclick="deleteGuideItem(this)">&times;</button>';
+            list.appendChild(li);
+            li.querySelector('input').focus();
+            saveCampGuide();
+        }
+
+        function deleteGuideItem(btn) {
+            const li = btn.parentElement;
+            li.remove();
+            saveCampGuide();
+        }
+
+        function saveCampGuide() {
+            const items = [];
+            document.querySelectorAll('#campGuideList .guide-item').forEach(input => {
+                items.push(input.value);
+            });
+            localStorage.setItem('occidentalCampGuide', JSON.stringify(items));
+        }
+
+        function loadCampGuide() {
+            const saved = localStorage.getItem('occidentalCampGuide');
+            if (saved) {
+                const items = JSON.parse(saved);
+                const list = document.getElementById('campGuideList');
+                list.innerHTML = '';
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<input type="text" class="guide-item" value="${item.replace(/"/g, '&quot;')}"><button class="guide-delete-btn" onclick="deleteGuideItem(this)">&times;</button>`;
+                    list.appendChild(li);
+                });
+            }
+            // Add event listeners for auto-save
+            document.querySelectorAll('#campGuideList .guide-item').forEach(input => {
+                input.addEventListener('change', saveCampGuide);
+                input.addEventListener('blur', saveCampGuide);
+            });
+        }
+
+        // Initialize camp guide on load
+        document.addEventListener('DOMContentLoaded', loadCampGuide);
+
+        // Also save when new items are added - attach listeners
+        const campGuideList = document.getElementById('campGuideList');
+        if (campGuideList) {
+            campGuideList.addEventListener('input', function(e) {
+                if (e.target.classList.contains('guide-item')) {
+                    saveCampGuide();
+                }
+            });
         }
 
         // Compass direction cycling
