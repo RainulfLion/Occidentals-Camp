@@ -2400,8 +2400,29 @@
             removeLinePreview();
         });
 
-        drawingCanvas.addEventListener('mouseleave', () => {
-            if (isDrawing) {
+        drawingCanvas.addEventListener('mouseleave', (e) => {
+            if (isDrawing && lineMode) {
+                // Complete the line instead of cancelling
+                const rect = drawingCanvas.getBoundingClientRect();
+                const endX = (e.clientX - rect.left) / zoomLevel;
+                const endY = (e.clientY - rect.top) / zoomLevel;
+
+                const dx = endX - lineStartX;
+                const dy = endY - lineStartY;
+                const distancePixels = Math.sqrt(dx * dx + dy * dy);
+                const distanceFeet = pixelsToFeet(distancePixels);
+
+                if (distancePixels > 10) {
+                    lines.push({
+                        x1: lineStartX,
+                        y1: lineStartY,
+                        x2: endX,
+                        y2: endY,
+                        distance: distanceFeet
+                    });
+                    redrawLines();
+                }
+
                 isDrawing = false;
                 removeLinePreview();
             }
