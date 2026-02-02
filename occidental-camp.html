@@ -82,6 +82,127 @@
             }
         }
 
+        /* Responsive styles for mobile */
+        @media (max-width: 1200px) {
+            .workspace {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                max-height: 300px;
+                border-left: none;
+                border-top: 2px solid #d4a574;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .toolbar {
+                padding: 10px 15px;
+                gap: 8px;
+            }
+            .toolbar-group {
+                padding: 4px 8px;
+                gap: 6px;
+            }
+            .toolbar button {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            .toolbar label {
+                font-size: 12px;
+            }
+            .color-swatch {
+                width: 24px;
+                height: 24px;
+            }
+            .header {
+                padding: 15px 20px;
+                min-height: 100px;
+            }
+            .header h1 {
+                font-size: 1.5em;
+            }
+            .header-logo {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .toolbar-group {
+                border-right: none;
+                border-bottom: 1px solid #d4a574;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .toolbar-group:last-child {
+                border-bottom: none;
+            }
+            .zoom-controls {
+                bottom: 20px;
+                right: 10px;
+            }
+            .map-size-controls {
+                bottom: 20px;
+                left: 10px;
+            }
+            .sidebar {
+                max-height: 250px;
+                padding: 15px;
+            }
+            .header-content {
+                gap: 10px;
+            }
+            .header-logo {
+                width: 60px;
+                height: 60px;
+            }
+            .header h1 {
+                font-size: 1.2em;
+            }
+            .header p {
+                font-size: 0.8em;
+            }
+        }
+
+        /* Map size controls */
+        .map-size-controls {
+            position: fixed;
+            bottom: 80px;
+            left: 30px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .map-size-controls label {
+            display: block;
+            font-size: 11px;
+            color: #4a3728;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .map-size-controls select {
+            padding: 8px 12px;
+            border: 2px solid #8B4513;
+            border-radius: 4px;
+            background: white;
+            color: #4a3728;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .map-size-controls select:focus {
+            outline: none;
+            border-color: #d4a574;
+        }
+
         .nav-bar {
             background: #5c3d2e;
             padding: 10px 30px;
@@ -306,6 +427,8 @@
             background-size: contain;
             transform-origin: 0 0;
             transition: transform 0.1s ease-out;
+            touch-action: none;
+            will-change: transform;
         }
 
         .tent {
@@ -316,6 +439,8 @@
             cursor: move;
             user-select: none;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            touch-action: none;
+            will-change: transform;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -761,6 +886,16 @@
                 <button onclick="zoomOut()">-</button>
             </div>
 
+            <div class="map-size-controls">
+                <label>Map Size</label>
+                <select id="mapSizeSelect" onchange="changeMapSize(this.value)">
+                    <option value="1500x1000">Small (150x100 ft)</option>
+                    <option value="2000x1500">Medium (200x150 ft)</option>
+                    <option value="3000x2000" selected>Large (300x200 ft)</option>
+                    <option value="4000x3000">X-Large (400x300 ft)</option>
+                </select>
+            </div>
+
             <div class="sidebar">
                 <div class="camp-info">
                     <h4>Occidental Camp Guide</h4>
@@ -894,6 +1029,51 @@
             }
         }
 
+        // Map size control
+        function changeMapSize(size) {
+            const [width, height] = size.split('x').map(Number);
+            const canvas = document.getElementById('canvas');
+            const drawingCanvas = document.getElementById('drawingCanvas');
+            const pencilCanvas = document.getElementById('pencilCanvas');
+
+            // Update canvas size
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+
+            // Update drawing canvases
+            if (drawingCanvas) {
+                drawingCanvas.width = width;
+                drawingCanvas.height = height;
+            }
+            if (pencilCanvas) {
+                pencilCanvas.width = width;
+                pencilCanvas.height = height;
+            }
+
+            // Redraw lines if they exist
+            if (typeof redrawLines === 'function') {
+                redrawLines();
+            }
+            if (typeof redrawPencilStrokes === 'function') {
+                redrawPencilStrokes();
+            }
+
+            // Save preference
+            localStorage.setItem('occidentalMapSize', size);
+        }
+
+        // Load saved map size on page load
+        function loadSavedMapSize() {
+            const savedSize = localStorage.getItem('occidentalMapSize');
+            if (savedSize) {
+                const select = document.getElementById('mapSizeSelect');
+                if (select) {
+                    select.value = savedSize;
+                    changeMapSize(savedSize);
+                }
+            }
+        }
+
         // Mouse wheel zoom
         canvasContainer.addEventListener('wheel', (e) => {
             e.preventDefault();
@@ -972,8 +1152,11 @@
             });
         }
 
-        // Initialize camp guide on load
-        document.addEventListener('DOMContentLoaded', loadCampGuide);
+        // Initialize camp guide and map size on load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCampGuide();
+            loadSavedMapSize();
+        });
 
         // Also save when new items are added - attach listeners
         const campGuideList = document.getElementById('campGuideList');
