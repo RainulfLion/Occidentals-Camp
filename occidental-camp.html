@@ -1566,6 +1566,8 @@
         }
 
         function exportLayout() {
+            const mapSizeSelect = document.getElementById('mapSizeSelect');
+            const mapSize = mapSizeSelect ? mapSizeSelect.value : '3000x2000';
             const data = {
                 tents: tents.map(tent => ({
                     ...tent,
@@ -1576,7 +1578,8 @@
                 pencilStrokes: pencilStrokes,
                 backgroundImage: backgroundImage,
                 backgroundSize: backgroundSize,
-                compassDirection: compassDirection
+                compassDirection: compassDirection,
+                mapSize: mapSize
             };
             const json = JSON.stringify(data, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
@@ -1682,6 +1685,15 @@
                 }
             }
 
+            // Restore map size
+            if (data.mapSize) {
+                const mapSizeSelect = document.getElementById('mapSizeSelect');
+                if (mapSizeSelect) {
+                    mapSizeSelect.value = data.mapSize;
+                    changeMapSize(data.mapSize);
+                }
+            }
+
             updateTentList();
             updateProperties();
         }
@@ -1690,6 +1702,8 @@
         const STORAGE_KEY = 'occidentalCampLayout';
 
         function saveToBrowser() {
+            const mapSizeSelect = document.getElementById('mapSizeSelect');
+            const mapSize = mapSizeSelect ? mapSizeSelect.value : '3000x2000';
             const data = {
                 tents: tents.map(tent => ({
                     ...tent,
@@ -1701,6 +1715,7 @@
                 backgroundImage: backgroundImage,
                 backgroundSize: backgroundSize,
                 compassDirection: compassDirection,
+                mapSize: mapSize,
                 savedAt: new Date().toISOString()
             };
 
