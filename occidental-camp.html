@@ -2513,149 +2513,267 @@
 
         // Initialize with default Occidental Camp layout
         function initializeOccidentalCamp() {
-            // Main Pavilion (Command Tent)
-            const mainPavilion = {
+            // Set compass direction to South
+            compassDirection = 'S';
+            compassIndex = 2;
+            document.getElementById('compassLetter').textContent = 'S';
+            document.getElementById('compassLabel').textContent = 'South';
+
+            // Open Area
+            const open = {
                 id: `tent-${tentCounter++}`,
-                name: 'Main Pavilion',
-                x: 400,
-                y: 300,
+                name: 'Open',
+                x: 591.6875,
+                y: 275.6875,
+                width: 250,
+                height: 1000,
+                shape: 'square',
+                rotation: 0,
+                color: 'cream',
+                zIndex: tents.length
+            };
+            tents.push(open);
+            renderTent(open);
+
+            // Michael Keal (large round)
+            const michaelKeal1 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Michael Keal',
+                x: 1483.333,
+                y: 882.026,
+                width: 160,
+                height: 160,
+                shape: 'round',
+                rotation: 0,
+                color: 'darkgreen',
+                zIndex: tents.length
+            };
+            tents.push(michaelKeal1);
+            renderTent(michaelKeal1);
+
+            // Michael Keal (small round)
+            const michaelKeal2 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Michael Keal',
+                x: 1500.64,
+                y: 1068.797,
+                width: 120,
+                height: 120,
+                shape: 'round',
+                rotation: 0,
+                color: 'darkgreen',
+                zIndex: tents.length
+            };
+            tents.push(michaelKeal2);
+            renderTent(michaelKeal2);
+
+            // Sir Richard (main)
+            const sirRichard1 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Sir Richard',
+                x: 906.667,
+                y: 1059.922,
                 width: 200,
-                height: 150,
+                height: 200,
+                shape: 'square',
+                rotation: 0,
+                color: 'brown',
+                zIndex: tents.length
+            };
+            tents.push(sirRichard1);
+            renderTent(sirRichard1);
+
+            // Sir Wolf
+            const sirWolf = {
+                id: `tent-${tentCounter++}`,
+                name: 'Sir Wolf',
+                x: 1450.391,
+                y: 588.729,
+                width: 200,
+                height: 100,
+                shape: 'square',
+                rotation: 0,
+                color: 'darkgreen',
+                zIndex: tents.length
+            };
+            tents.push(sirWolf);
+            renderTent(sirWolf);
+
+            // Sir Gregor Pop up
+            const sirGregor = {
+                id: `tent-${tentCounter++}`,
+                name: 'Sir Gregor Pop up',
+                x: 972.5,
+                y: 903.156,
+                width: 100,
+                height: 100,
                 shape: 'square',
                 rotation: 0,
                 color: 'darkred',
                 zIndex: tents.length
             };
-            tents.push(mainPavilion);
-            renderTent(mainPavilion);
+            tents.push(sirGregor);
+            renderTent(sirGregor);
 
-            // Guard Post 1 (North)
-            const guard1 = {
+            // Rainulf Popup
+            const rainulfPopup = {
                 id: `tent-${tentCounter++}`,
-                name: 'Guard Post N',
-                x: 450,
-                y: 100,
-                width: 80,
-                height: 80,
-                shape: 'round',
+                name: 'Rainulf Popup',
+                x: 970.297,
+                y: 465.344,
+                width: 100,
+                height: 100,
+                shape: 'square',
                 rotation: 0,
-                color: 'darkgreen',
+                color: 'darkred',
                 zIndex: tents.length
             };
-            tents.push(guard1);
-            renderTent(guard1);
+            tents.push(rainulfPopup);
+            renderTent(rainulfPopup);
 
-            // Guard Post 2 (South)
-            const guard2 = {
+            // Richard popup
+            const richardPopup = {
                 id: `tent-${tentCounter++}`,
-                name: 'Guard Post S',
-                x: 450,
-                y: 550,
-                width: 80,
-                height: 80,
-                shape: 'round',
-                rotation: 0,
-                color: 'darkgreen',
-                zIndex: tents.length
-            };
-            tents.push(guard2);
-            renderTent(guard2);
-
-            // Cooking Area
-            const cooking = {
-                id: `tent-${tentCounter++}`,
-                name: 'Cooking Area',
-                x: 700,
-                y: 280,
-                width: 120,
+                name: 'Richard popup',
+                x: 1168.75,
+                y: 1084.656,
+                width: 100,
                 height: 100,
                 shape: 'square',
                 rotation: 0,
                 color: 'brown',
                 zIndex: tents.length
             };
-            tents.push(cooking);
-            renderTent(cooking);
+            tents.push(richardPopup);
+            renderTent(richardPopup);
 
-            // Storage Tent 1
-            const storage1 = {
+            // Fire pit
+            const firePit = {
                 id: `tent-${tentCounter++}`,
-                name: 'Storage',
-                x: 150,
-                y: 250,
-                width: 100,
-                height: 80,
-                shape: 'square',
-                rotation: 0,
-                color: 'darkbrown',
-                zIndex: tents.length
-            };
-            tents.push(storage1);
-            renderTent(storage1);
-
-            // Sleeping Quarters 1
-            const sleep1 = {
-                id: `tent-${tentCounter++}`,
-                name: 'Quarters A',
-                x: 200,
-                y: 450,
-                width: 100,
-                height: 100,
-                shape: 'square',
-                rotation: 0,
-                color: 'tan',
-                zIndex: tents.length
-            };
-            tents.push(sleep1);
-            renderTent(sleep1);
-
-            // Sleeping Quarters 2
-            const sleep2 = {
-                id: `tent-${tentCounter++}`,
-                name: 'Quarters B',
-                x: 320,
-                y: 500,
-                width: 100,
-                height: 100,
-                shape: 'square',
-                rotation: 0,
-                color: 'tan',
-                zIndex: tents.length
-            };
-            tents.push(sleep2);
-            renderTent(sleep2);
-
-            // Sleeping Quarters 3
-            const sleep3 = {
-                id: `tent-${tentCounter++}`,
-                name: 'Quarters C',
-                x: 580,
-                y: 500,
-                width: 100,
-                height: 100,
-                shape: 'square',
-                rotation: 0,
-                color: 'tan',
-                zIndex: tents.length
-            };
-            tents.push(sleep3);
-            renderTent(sleep3);
-
-            // Meeting Circle (Round)
-            const meeting = {
-                id: `tent-${tentCounter++}`,
-                name: 'Meeting Area',
-                x: 680,
-                y: 450,
+                name: 'Fire pit',
+                x: 1229.953,
+                y: 710.766,
                 width: 100,
                 height: 100,
                 shape: 'round',
                 rotation: 0,
-                color: 'cream',
+                color: 'darkred',
                 zIndex: tents.length
             };
-            tents.push(meeting);
-            renderTent(meeting);
+            tents.push(firePit);
+            renderTent(firePit);
+
+            // Henry Kohnke
+            const henryKohnke = {
+                id: `tent-${tentCounter++}`,
+                name: 'Henry Kohnke',
+                x: 920.781,
+                y: 614.938,
+                width: 120,
+                height: 100,
+                shape: 'square',
+                rotation: 0,
+                color: 'tan',
+                zIndex: tents.length
+            };
+            tents.push(henryKohnke);
+            renderTent(henryKohnke);
+
+            // Ryan Lunt
+            const ryanLunt = {
+                id: `tent-${tentCounter++}`,
+                name: 'Ryan Lunt',
+                x: 918.984,
+                y: 744.469,
+                width: 120,
+                height: 80,
+                shape: 'square',
+                rotation: 0,
+                color: 'tan',
+                zIndex: tents.length
+            };
+            tents.push(ryanLunt);
+            renderTent(ryanLunt);
+
+            // Michael Keal Shade
+            const michaelShade = {
+                id: `tent-${tentCounter++}`,
+                name: 'Michael Keal Shade',
+                x: 1360,
+                y: 861.656,
+                width: 100,
+                height: 160,
+                shape: 'square',
+                rotation: 0,
+                color: 'darkgreen',
+                zIndex: tents.length
+            };
+            tents.push(michaelShade);
+            renderTent(michaelShade);
+
+            // Sir Richard (shade)
+            const sirRichard2 = {
+                id: `tent-${tentCounter++}`,
+                name: 'Sir Richard',
+                x: 1142.859,
+                y: 299.646,
+                width: 100,
+                height: 160,
+                shape: 'square',
+                rotation: 0,
+                color: 'brown',
+                zIndex: tents.length
+            };
+            tents.push(sirRichard2);
+            renderTent(sirRichard2);
+
+            // Sir Wolf popup
+            const sirWolfPopup = {
+                id: `tent-${tentCounter++}`,
+                name: 'Sir Wolf popup',
+                x: 1325.438,
+                y: 584.594,
+                width: 100,
+                height: 100,
+                shape: 'square',
+                rotation: 0,
+                color: 'darkgreen',
+                zIndex: tents.length
+            };
+            tents.push(sirWolfPopup);
+            renderTent(sirWolfPopup);
+
+            // BloodMoon
+            const bloodMoon = {
+                id: `tent-${tentCounter++}`,
+                name: 'BloodMoon',
+                x: 1698.313,
+                y: 278.146,
+                width: 800,
+                height: 1000,
+                shape: 'square',
+                rotation: 0,
+                color: 'darkred',
+                zIndex: tents.length
+            };
+            tents.push(bloodMoon);
+            renderTent(bloodMoon);
+
+            // Rainulf Lion
+            const rainulfLion = {
+                id: `tent-${tentCounter++}`,
+                name: 'Rainulf Lion',
+                x: 967.833,
+                y: 305.938,
+                width: 100,
+                height: 140,
+                shape: 'square',
+                rotation: 0,
+                color: 'darkred',
+                zIndex: tents.length
+            };
+            tents.push(rainulfLion);
+            renderTent(rainulfLion);
 
             updateTentList();
         }
