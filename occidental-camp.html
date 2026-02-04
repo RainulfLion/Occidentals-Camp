@@ -1054,8 +1054,8 @@
             if (typeof redrawLines === 'function') {
                 redrawLines();
             }
-            if (typeof redrawPencilStrokes === 'function') {
-                redrawPencilStrokes();
+            if (typeof redrawPencil === 'function') {
+                redrawPencil();
             }
 
             // Save preference
@@ -1616,6 +1616,18 @@
             pencilStrokes = [];
             selectedTent = null;
 
+            // Restore map size FIRST before setting up canvases
+            if (data.mapSize) {
+                const mapSizeSelect = document.getElementById('mapSizeSelect');
+                if (mapSizeSelect) {
+                    mapSizeSelect.value = data.mapSize;
+                }
+                const [width, height] = data.mapSize.split('x').map(Number);
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+                localStorage.setItem('occidentalMapSize', data.mapSize);
+            }
+
             canvas.innerHTML = '<canvas class="drawing-canvas" id="pencilCanvas"></canvas><canvas class="drawing-canvas" id="drawingCanvas"></canvas><svg class="grid-overlay" id="gridOverlay"></svg>';
 
             drawingCanvas = document.getElementById('drawingCanvas');
@@ -1682,15 +1694,6 @@
                     compassIndex = dirIndex;
                     document.getElementById('compassLetter').textContent = compassDirections[dirIndex].letter;
                     document.getElementById('compassLabel').textContent = compassDirections[dirIndex].label;
-                }
-            }
-
-            // Restore map size
-            if (data.mapSize) {
-                const mapSizeSelect = document.getElementById('mapSizeSelect');
-                if (mapSizeSelect) {
-                    mapSizeSelect.value = data.mapSize;
-                    changeMapSize(data.mapSize);
                 }
             }
 
