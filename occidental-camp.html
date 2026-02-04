@@ -2523,8 +2523,8 @@
             const open = {
                 id: `tent-${tentCounter++}`,
                 name: 'Open',
-                x: 591.6875,
-                y: 275.6875,
+                x: 901.6875,
+                y: 287.6875,
                 width: 250,
                 height: 1000,
                 shape: 'square',
@@ -2539,8 +2539,8 @@
             const michaelKeal1 = {
                 id: `tent-${tentCounter++}`,
                 name: 'Michael Keal',
-                x: 1483.333,
-                y: 882.026,
+                x: 1885.328,
+                y: 900.016,
                 width: 160,
                 height: 160,
                 shape: 'round',
@@ -2555,8 +2555,8 @@
             const michaelKeal2 = {
                 id: `tent-${tentCounter++}`,
                 name: 'Michael Keal',
-                x: 1500.64,
-                y: 1068.797,
+                x: 1910.625,
+                y: 1132.797,
                 width: 120,
                 height: 120,
                 shape: 'round',
@@ -2571,8 +2571,8 @@
             const sirRichard1 = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Richard',
-                x: 906.667,
-                y: 1059.922,
+                x: 1204.656,
+                y: 1085.922,
                 width: 200,
                 height: 200,
                 shape: 'square',
@@ -2587,8 +2587,8 @@
             const sirWolf = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Wolf',
-                x: 1450.391,
-                y: 588.729,
+                x: 1836.391,
+                y: 594.719,
                 width: 200,
                 height: 100,
                 shape: 'square',
@@ -2603,8 +2603,8 @@
             const sirGregor = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Gregor Pop up',
-                x: 972.5,
-                y: 903.156,
+                x: 1766.5,
+                y: 465.141,
                 width: 100,
                 height: 100,
                 shape: 'square',
@@ -2619,8 +2619,8 @@
             const rainulfPopup = {
                 id: `tent-${tentCounter++}`,
                 name: 'Rainulf Popup',
-                x: 970.297,
-                y: 465.344,
+                x: 1384.297,
+                y: 415.344,
                 width: 100,
                 height: 100,
                 shape: 'square',
@@ -2635,8 +2635,8 @@
             const richardPopup = {
                 id: `tent-${tentCounter++}`,
                 name: 'Richard popup',
-                x: 1168.75,
-                y: 1084.656,
+                x: 1448.75,
+                y: 1000.641,
                 width: 100,
                 height: 100,
                 shape: 'square',
@@ -2651,8 +2651,8 @@
             const firePit = {
                 id: `tent-${tentCounter++}`,
                 name: 'Fire pit',
-                x: 1229.953,
-                y: 710.766,
+                x: 1493.938,
+                y: 724.766,
                 width: 100,
                 height: 100,
                 shape: 'round',
@@ -2667,8 +2667,8 @@
             const henryKohnke = {
                 id: `tent-${tentCounter++}`,
                 name: 'Henry Kohnke',
-                x: 920.781,
-                y: 614.938,
+                x: 1222.766,
+                y: 734.938,
                 width: 120,
                 height: 100,
                 shape: 'square',
@@ -2683,8 +2683,8 @@
             const ryanLunt = {
                 id: `tent-${tentCounter++}`,
                 name: 'Ryan Lunt',
-                x: 918.984,
-                y: 744.469,
+                x: 1230.969,
+                y: 888.469,
                 width: 120,
                 height: 80,
                 shape: 'square',
@@ -2699,8 +2699,8 @@
             const michaelShade = {
                 id: `tent-${tentCounter++}`,
                 name: 'Michael Keal Shade',
-                x: 1360,
-                y: 861.656,
+                x: 1732,
+                y: 1085.641,
                 width: 100,
                 height: 160,
                 shape: 'square',
@@ -2715,8 +2715,8 @@
             const sirRichard2 = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Richard',
-                x: 1142.859,
-                y: 299.646,
+                x: 1444.844,
+                y: 1121.641,
                 width: 100,
                 height: 160,
                 shape: 'square',
@@ -2731,8 +2731,8 @@
             const sirWolfPopup = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Wolf popup',
-                x: 1325.438,
-                y: 584.594,
+                x: 1773.438,
+                y: 710.594,
                 width: 100,
                 height: 100,
                 shape: 'square',
@@ -2747,8 +2747,8 @@
             const bloodMoon = {
                 id: `tent-${tentCounter++}`,
                 name: 'BloodMoon',
-                x: 1698.313,
-                y: 278.146,
+                x: 2074.969,
+                y: 288.797,
                 width: 800,
                 height: 1000,
                 shape: 'square',
@@ -2763,8 +2763,8 @@
             const rainulfLion = {
                 id: `tent-${tentCounter++}`,
                 name: 'Rainulf Lion',
-                x: 967.833,
-                y: 305.938,
+                x: 1221.828,
+                y: 391.938,
                 width: 100,
                 height: 140,
                 shape: 'square',
@@ -2774,6 +2774,16 @@
             };
             tents.push(rainulfLion);
             renderTent(rainulfLion);
+
+            // Add default measurement line (90 ft)
+            lines.push({
+                x1: 1152,
+                y1: 266,
+                x2: 2052,
+                y2: 266,
+                distance: 90
+            });
+            redrawLines();
 
             updateTentList();
         }
