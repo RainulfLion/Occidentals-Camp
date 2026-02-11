@@ -2513,18 +2513,18 @@
 
         // Initialize with default Occidental Camp layout
         function initializeOccidentalCamp() {
-            // Set compass direction to South
-            compassDirection = 'S';
-            compassIndex = 2;
-            document.getElementById('compassLetter').textContent = 'S';
-            document.getElementById('compassLabel').textContent = 'South';
+            // Set compass direction to North
+            compassDirection = 'N';
+            compassIndex = 0;
+            document.getElementById('compassLetter').textContent = 'N';
+            document.getElementById('compassLabel').textContent = 'North';
 
             // Open Area
             const open = {
                 id: `tent-${tentCounter++}`,
                 name: 'Open',
-                x: 901.6875,
-                y: 287.6875,
+                x: 891.687,
+                y: 254.83,
                 width: 250,
                 height: 1000,
                 shape: 'square',
@@ -2539,8 +2539,8 @@
             const michaelKeal1 = {
                 id: `tent-${tentCounter++}`,
                 name: 'Michael Keal',
-                x: 1167,
-                y: 476.694,
+                x: 1159.5,
+                y: 510.422,
                 width: 160,
                 height: 160,
                 shape: 'round',
@@ -2555,8 +2555,8 @@
             const michaelKeal2 = {
                 id: `tent-${tentCounter++}`,
                 name: 'Michael Keal',
-                x: 1342.306,
-                y: 449.472,
+                x: 1348.547,
+                y: 493.219,
                 width: 120,
                 height: 120,
                 shape: 'round',
@@ -2571,8 +2571,8 @@
             const sirRichard1 = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Richard',
-                x: 1182.972,
-                y: 1047.583,
+                x: 1200.112,
+                y: 1080.435,
                 width: 200,
                 height: 200,
                 shape: 'square',
@@ -2587,8 +2587,8 @@
             const sirWolf = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Wolf',
-                x: 1169.722,
-                y: 824.722,
+                x: 1172.219,
+                y: 292.219,
                 width: 200,
                 height: 100,
                 shape: 'square',
@@ -2603,8 +2603,8 @@
             const sirGregor = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Gregor Pop up',
-                x: 1721.5,
-                y: 693.472,
+                x: 1631.484,
+                y: 616.792,
                 width: 100,
                 height: 100,
                 shape: 'square',
@@ -2619,8 +2619,8 @@
             const rainulfPopup = {
                 id: `tent-${tentCounter++}`,
                 name: 'Rainulf Popup',
-                x: 1295.972,
-                y: 318.694,
+                x: 1515.12,
+                y: 617.01,
                 width: 100,
                 height: 100,
                 shape: 'square',
@@ -2651,8 +2651,8 @@
             const firePit = {
                 id: `tent-${tentCounter++}`,
                 name: 'Fire pit',
-                x: 1680.611,
-                y: 978.111,
+                x: 1625.609,
+                y: 849.776,
                 width: 100,
                 height: 100,
                 shape: 'round',
@@ -2667,8 +2667,8 @@
             const henryKohnke = {
                 id: `tent-${tentCounter++}`,
                 name: 'Henry Kohnke',
-                x: 1929.444,
-                y: 1179.944,
+                x: 1922.76,
+                y: 1168.266,
                 width: 120,
                 height: 100,
                 shape: 'square',
@@ -2683,8 +2683,8 @@
             const ryanLunt = {
                 id: `tent-${tentCounter++}`,
                 name: 'Ryan Lunt',
-                x: 1927.639,
-                y: 1071.806,
+                x: 1929.292,
+                y: 1065.13,
                 width: 120,
                 height: 80,
                 shape: 'square',
@@ -2699,8 +2699,8 @@
             const michaelShade = {
                 id: `tent-${tentCounter++}`,
                 name: 'Michael Keal Shade',
-                x: 1342.667,
-                y: 587.139,
+                x: 1221.683,
+                y: 669.079,
                 width: 100,
                 height: 160,
                 shape: 'square',
@@ -2731,8 +2731,8 @@
             const sirWolfPopup = {
                 id: `tent-${tentCounter++}`,
                 name: 'Sir Wolf popup',
-                x: 1418.444,
-                y: 813.944,
+                x: 1390.938,
+                y: 296.438,
                 width: 100,
                 height: 100,
                 shape: 'square',
@@ -2759,28 +2759,12 @@
             tents.push(bloodMoon);
             renderTent(bloodMoon);
 
-            // Rainulf Lion
-            const rainulfLion = {
-                id: `tent-${tentCounter++}`,
-                name: 'Rainulf Lion',
-                x: 1183.5,
-                y: 298.611,
-                width: 100,
-                height: 140,
-                shape: 'square',
-                rotation: 0,
-                color: 'darkred',
-                zIndex: tents.length
-            };
-            tents.push(rainulfLion);
-            renderTent(rainulfLion);
-
             // Rashidi
             const rashidi = {
                 id: `tent-${tentCounter++}`,
                 name: 'Rashidi',
-                x: 1915,
-                y: 905,
+                x: 1925,
+                y: 931.667,
                 width: 130,
                 height: 120,
                 shape: 'square',
@@ -2795,8 +2779,8 @@
             const mavrick = {
                 id: `tent-${tentCounter++}`,
                 name: 'Mavrick Tent',
-                x: 1915,
-                y: 748.333,
+                x: 1928.333,
+                y: 781.661,
                 width: 120,
                 height: 120,
                 shape: 'square',
@@ -2811,8 +2795,8 @@
             const justinCeleste = {
                 id: `tent-${tentCounter++}`,
                 name: 'Justin & Celeste',
-                x: 1920,
-                y: 588.333,
+                x: 1918.571,
+                y: 601.185,
                 width: 120,
                 height: 140,
                 shape: 'square',
@@ -2870,6 +2854,22 @@
             };
             tents.push(kitchen);
             renderTent(kitchen);
+
+            // Sir Roger
+            const sirRoger = {
+                id: `tent-${tentCounter++}`,
+                name: 'Sir Roger',
+                x: 1289.763,
+                y: 894.505,
+                width: 140,
+                height: 140,
+                shape: 'square',
+                rotation: 30.754,
+                color: 'tan',
+                zIndex: tents.length
+            };
+            tents.push(sirRoger);
+            renderTent(sirRoger);
 
             // Add default measurement line (90 ft)
             lines.push({
