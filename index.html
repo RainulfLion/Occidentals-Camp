@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camp Setup Planner</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -32,6 +38,7 @@
             color: white;
             padding: 25px 30px;
             text-align: center;
+            position: relative;
         }
 
         .header h1 {
@@ -564,13 +571,153 @@
             font-size: 0.85em;
             z-index: 1000;
         }
+
+        /* ── Firebase Auth UI ── */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #2c3e50 0%, #667eea 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 16px;
+            padding: 48px 40px 40px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .login-box h2 { color: #2c3e50; font-size: 1.5em; margin-bottom: 8px; }
+        .login-box p  { color: #5a6a7a; font-size: 0.93em; margin-bottom: 28px; line-height: 1.5; }
+
+        .google-signin-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 14px 24px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #2c3e50;
+            width: 100%;
+            transition: background 0.2s, border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .google-signin-btn:hover { background: #eef0ff; border-color: #4a5cd4; }
+        .google-signin-btn svg   { width: 20px; height: 20px; flex-shrink: 0; }
+
+        .login-error {
+            color: #c0392b;
+            font-size: 0.83em;
+            margin-top: 12px;
+            min-height: 1em;
+        }
+
+        .user-bar {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: rgba(0,0,0,0.25);
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        .user-bar img        { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #667eea; object-fit: cover; }
+        .user-bar .user-name { color: #c8d8e8; font-size: 0.82em; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .user-bar .signout-btn {
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.78em;
+            font-family: inherit;
+        }
+        .user-bar .signout-btn:hover { background: rgba(255,255,255,0.3); }
+
+        .sync-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(44, 62, 80, 0.92);
+            color: #c8d8e8;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.82em;
+            z-index: 5000;
+            display: none;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .firebase-setup-notice {
+            background: #eef2ff;
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.82em;
+            color: #3a4abf;
+            margin-top: 16px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .firebase-setup-notice code { background: #dce3ff; padding: 1px 4px; border-radius: 3px; font-size: 0.9em; }
     </style>
 </head>
 <body>
+
+    <!-- Login overlay -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <h2>⛺ Camp Setup Planner</h2>
+            <p>Sign in to design and share your camp layout.<br>Changes sync with everyone in real time.</p>
+            <button class="google-signin-btn" onclick="signInWithGoogle()">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Sign in with Google
+            </button>
+            <div id="loginError" class="login-error"></div>
+            <div class="firebase-setup-notice" id="firebaseSetupNotice" style="display:none">
+                <strong>Firebase not configured yet.</strong><br>
+                Open <code>index.html</code>, find the <code>firebaseConfig</code> block near the top of the
+                <code>&lt;script&gt;</code> section, and replace the placeholder values with your Firebase project
+                credentials.
+            </div>
+        </div>
+    </div>
+
+    <!-- Sync status toast -->
+    <div id="syncStatus" class="sync-status"></div>
+
     <div class="container">
         <div class="header">
             <h1>⛺ Camp Setup Planner</h1>
             <p>Design your perfect campground layout</p>
+            <div class="user-bar" id="userBar">
+                <img id="userPhoto" src="" alt="User avatar">
+                <span class="user-name" id="userName"></span>
+                <button class="signout-btn" onclick="signOut()">Sign Out</button>
+            </div>
         </div>
 
         <div class="nav-bar">
@@ -661,6 +808,163 @@
     </div>
 
     <script>
+        // ================================================================
+        // FIREBASE CONFIGURATION
+        // ================================================================
+        // Same project as occidental-camp.html – paste the same config here.
+        // See occidental-camp.html for full setup instructions.
+        // ================================================================
+        const firebaseConfig = {
+            apiKey:            "YOUR_API_KEY",
+            authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId:         "YOUR_PROJECT_ID",
+            storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId:             "YOUR_APP_ID"
+        };
+
+        const FIREBASE_CONFIGURED = firebaseConfig.apiKey !== "YOUR_API_KEY";
+
+        let auth, db;
+        if (FIREBASE_CONFIGURED) {
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db   = firebase.firestore();
+        } else {
+            document.addEventListener('DOMContentLoaded', () => {
+                const notice = document.getElementById('firebaseSetupNotice');
+                if (notice) notice.style.display = 'block';
+            });
+        }
+
+        // ── Sync helpers ──────────────────────────────────────────────
+        let _saveTimer   = null;
+        let _localChange = false;
+        let _unsubSync   = null;
+
+        function _showSync(msg) {
+            const el = document.getElementById('syncStatus');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.display = 'block';
+            el.style.opacity = '1';
+        }
+        function _hideSync() {
+            const el = document.getElementById('syncStatus');
+            if (!el) return;
+            el.style.opacity = '0';
+            setTimeout(() => { el.style.display = 'none'; }, 350);
+        }
+
+        function scheduleFirestoreSave() {
+            if (!FIREBASE_CONFIGURED || !auth || !auth.currentUser) return;
+            clearTimeout(_saveTimer);
+            _localChange = true;
+            _showSync('Saving…');
+            _saveTimer = setTimeout(async () => {
+                await _saveToFirestore();
+                _showSync('Saved ✓');
+                setTimeout(() => {
+                    _hideSync();
+                    setTimeout(() => { _localChange = false; }, 600);
+                }, 1800);
+            }, 1400);
+        }
+
+        function _getLayoutData() {
+            return {
+                tents:            tents.map(t => ({ ...t })),
+                lines:            lines,
+                pencilStrokes:    pencilStrokes,
+                backgroundSize:   backgroundSize,
+                compassDirection: compassDirection,
+                savedAt:          new Date().toISOString(),
+                savedBy:          auth.currentUser ? auth.currentUser.email : 'unknown'
+            };
+        }
+
+        async function _saveToFirestore() {
+            if (!auth || !auth.currentUser) return;
+            try {
+                await db.doc('layouts/campSetup').set(_getLayoutData());
+            } catch (err) {
+                console.error('Firestore save error:', err);
+                _showSync('Save failed!');
+                setTimeout(_hideSync, 3000);
+            }
+        }
+
+        async function _loadFromFirestore() {
+            try {
+                const snap = await db.doc('layouts/campSetup').get();
+                if (snap.exists) {
+                    loadLayout(snap.data());
+                }
+                // If no data yet, leave canvas empty (user can start fresh)
+            } catch (err) {
+                console.error('Firestore load error:', err);
+            }
+        }
+
+        function _setupRealtimeSync() {
+            if (_unsubSync) _unsubSync();
+            _unsubSync = db.doc('layouts/campSetup').onSnapshot(snap => {
+                if (!snap.exists || _localChange) return;
+                const data = snap.data();
+                if (data.savedBy !== (auth.currentUser && auth.currentUser.email)) {
+                    _showSync('Syncing changes…');
+                    loadLayout(data);
+                    setTimeout(_hideSync, 2200);
+                }
+            }, err => console.error('Realtime sync error:', err));
+        }
+
+        function signInWithGoogle() {
+            if (!FIREBASE_CONFIGURED) return;
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(err => {
+                const el = document.getElementById('loginError');
+                if (el) el.textContent = 'Sign-in failed: ' + err.message;
+            });
+        }
+
+        function signOut() {
+            if (!auth) return;
+            if (_unsubSync) { _unsubSync(); _unsubSync = null; }
+            auth.signOut();
+        }
+
+        if (FIREBASE_CONFIGURED) {
+            auth.onAuthStateChanged(async user => {
+                const overlay = document.getElementById('loginOverlay');
+                const userBar = document.getElementById('userBar');
+                if (user) {
+                    if (overlay) overlay.style.display = 'none';
+                    if (userBar) {
+                        userBar.style.display = 'flex';
+                        document.getElementById('userName').textContent =
+                            user.displayName || user.email;
+                        const photoEl = document.getElementById('userPhoto');
+                        if (user.photoURL) {
+                            photoEl.src = user.photoURL;
+                        } else {
+                            photoEl.style.display = 'none';
+                        }
+                    }
+                    await _loadFromFirestore();
+                    _setupRealtimeSync();
+                } else {
+                    if (overlay) overlay.style.display = 'flex';
+                    if (userBar)  userBar.style.display  = 'none';
+                    if (_unsubSync) { _unsubSync(); _unsubSync = null; }
+                }
+            });
+        }
+
+        // ================================================================
+        // END FIREBASE SETUP – existing app code below
+        // ================================================================
+
         let tents = [];
         let borders = [];
         let selectedTent = null;
@@ -788,6 +1092,7 @@
                 const colorScheme = tentColors[color];
                 tentEl.style.background = colorScheme.bg;
                 tentEl.style.borderColor = colorScheme.border;
+                scheduleFirestoreSave();
             }
         }
 
@@ -796,9 +1101,10 @@
             compassIndex = (compassIndex + 1) % compassDirections.length;
             const direction = compassDirections[compassIndex];
             compassDirection = direction.letter;
-            
+
             document.getElementById('compassLetter').textContent = direction.letter;
             document.getElementById('compassLabel').textContent = direction.label;
+            scheduleFirestoreSave();
         }
 
         function addTent(shape = 'square') {
@@ -817,6 +1123,7 @@
             tents.push(tent);
             renderTent(tent);
             updateTentList();
+            scheduleFirestoreSave();
         }
 
         function renderTent(tent) {
@@ -948,6 +1255,7 @@
         document.addEventListener('touchmove', handleMove);
 
         function handleEnd() {
+            if (isDragging || isRotating) scheduleFirestoreSave();
             isDragging = false;
             isRotating = false;
         }
@@ -1069,6 +1377,7 @@
                 const sizeText = label.querySelector('.tent-size').outerHTML;
                 label.innerHTML = name + sizeText;
                 updateTentList();
+                scheduleFirestoreSave();
             }
         }
 
@@ -1078,17 +1387,18 @@
                 const heightFeet = parseFloat(document.getElementById('tentHeight').value);
                 selectedTent.width = Math.max(feetToPixels(2), feetToPixels(widthFeet));
                 selectedTent.height = Math.max(feetToPixels(2), feetToPixels(heightFeet));
-                
+
                 const tentEl = document.getElementById(selectedTent.id);
                 tentEl.style.width = selectedTent.width + 'px';
                 tentEl.style.height = selectedTent.height + 'px';
-                
+
                 const sizeLabel = tentEl.querySelector('.tent-size');
                 if (sizeLabel) {
                     const newWidthFeet = pixelsToFeet(selectedTent.width);
                     const newHeightFeet = pixelsToFeet(selectedTent.height);
                     sizeLabel.textContent = `${newWidthFeet}×${newHeightFeet}ft`;
                 }
+                scheduleFirestoreSave();
             }
         }
 
@@ -1098,27 +1408,29 @@
                 const diameter = Math.max(feetToPixels(2), feetToPixels(diameterFeet));
                 selectedTent.width = diameter;
                 selectedTent.height = diameter;
-                
+
                 const tentEl = document.getElementById(selectedTent.id);
                 tentEl.style.width = diameter + 'px';
                 tentEl.style.height = diameter + 'px';
-                
+
                 const sizeLabel = tentEl.querySelector('.tent-size');
                 if (sizeLabel) {
                     const newDiameterFeet = pixelsToFeet(diameter);
                     sizeLabel.textContent = `${newDiameterFeet}ft diameter`;
                 }
+                scheduleFirestoreSave();
             }
         }
 
         function updateTentRotation() {
             if (selectedTent && selectedTent.shape === 'square') {
                 let rotation = parseInt(document.getElementById('tentRotation').value);
-                rotation = ((rotation % 360) + 360) % 360; // Normalize to 0-359
+                rotation = ((rotation % 360) + 360) % 360;
                 selectedTent.rotation = rotation;
-                
+
                 const tentEl = document.getElementById(selectedTent.id);
                 tentEl.style.transform = `rotate(${rotation}deg)`;
+                scheduleFirestoreSave();
             }
         }
 
@@ -1128,10 +1440,11 @@
                 const y = parseInt(document.getElementById('tentY').value);
                 selectedTent.x = Math.max(0, x);
                 selectedTent.y = Math.max(0, y);
-                
+
                 const tentEl = document.getElementById(selectedTent.id);
                 tentEl.style.left = selectedTent.x + 'px';
                 tentEl.style.top = selectedTent.y + 'px';
+                scheduleFirestoreSave();
             }
         }
 
@@ -1165,6 +1478,7 @@
                 selectedTent = null;
                 updateProperties();
                 updateTentList();
+                scheduleFirestoreSave();
             }
         }
 
@@ -1196,6 +1510,7 @@
                 
                 updateProperties();
                 updateTentList();
+                scheduleFirestoreSave();
             }
         }
 
@@ -1230,6 +1545,7 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     loadLayout(data);
+                    scheduleFirestoreSave();
                     alert('Layout loaded successfully!');
                 } catch (error) {
                     alert('Error loading layout: Invalid JSON file');
@@ -1498,15 +1814,16 @@
                     if (isPointNearStroke(clickX, clickY, pencilStrokes[i])) {
                         pencilStrokes.splice(i, 1);
                         redrawPencil();
+                        scheduleFirestoreSave();
                         return;
                     }
                 }
                 return;
             }
-            
+
             // Drawing mode - draw new strokes
             if (!pencilMode) return;
-            
+
             isDrawing = true;
             currentStroke = [{x: clickX, y: clickY}];
             lastPencilX = clickX;
@@ -1534,6 +1851,7 @@
             if (isDrawing && currentStroke.length > 1) {
                 pencilStrokes.push(currentStroke);
                 currentStroke = [];
+                scheduleFirestoreSave();
             }
             isDrawing = false;
         });
@@ -1542,6 +1860,7 @@
             if (isDrawing && currentStroke.length > 1) {
                 pencilStrokes.push(currentStroke);
                 currentStroke = [];
+                scheduleFirestoreSave();
             }
             isDrawing = false;
         });
@@ -1560,15 +1879,16 @@
                     if (isPointNearStroke(clickX, clickY, pencilStrokes[i])) {
                         pencilStrokes.splice(i, 1);
                         redrawPencil();
+                        scheduleFirestoreSave();
                         return;
                     }
                 }
                 return;
             }
-            
+
             // Drawing mode - draw new strokes
             if (!pencilMode) return;
-            
+
             isDrawing = true;
             currentStroke = [{x: clickX, y: clickY}];
             lastPencilX = clickX;
@@ -1598,6 +1918,7 @@
             if (isDrawing && currentStroke.length > 1) {
                 pencilStrokes.push(currentStroke);
                 currentStroke = [];
+                scheduleFirestoreSave();
             }
             isDrawing = false;
         });
@@ -1803,15 +2124,16 @@
                     if (isPointNearLine(clickX, clickY, lines[i])) {
                         lines.splice(i, 1);
                         redrawLines();
+                        scheduleFirestoreSave();
                         return;
                     }
                 }
                 return;
             }
-            
+
             // Drawing mode - draw new lines
             if (!lineMode) return;
-            
+
             lineStartX = clickX;
             lineStartY = clickY;
             isDrawing = true;
@@ -1848,8 +2170,9 @@
                     distance: distanceFeet
                 });
                 redrawLines();
+                scheduleFirestoreSave();
             }
-            
+
             isDrawing = false;
             removeLinePreview();
         });
@@ -1875,15 +2198,16 @@
                     if (isPointNearLine(clickX, clickY, lines[i])) {
                         lines.splice(i, 1);
                         redrawLines();
+                        scheduleFirestoreSave();
                         return;
                     }
                 }
                 return;
             }
-            
+
             // Drawing mode - draw new lines
             if (!lineMode) return;
-            
+
             lineStartX = clickX;
             lineStartY = clickY;
             isDrawing = true;
@@ -1924,8 +2248,9 @@
                     distance: distanceFeet
                 });
                 redrawLines();
+                scheduleFirestoreSave();
             }
-            
+
             isDrawing = false;
             removeLinePreview();
         });
